@@ -1,0 +1,44 @@
+{
+  "scenarios": [
+    {
+      "name": "predictions stay sealed from other members until the event is revealed",
+      "members": { "host": "adult", "guesser": "adult" },
+      "steps": [
+        { "action": "db", "as": "host", "sql": "INSERT INTO app_prediction_league__events (id, title, type, status, created_by, created_by_name, created_at) VALUES (?, ?, 'number', 'open', ?, ?, ?)", "params": ["e1", "Jellybeans", "{{host}}", "Host", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "host", "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", "params": ["ph", "e1", "{{host}}", "Host", "400", "2026-07-05T00:00:00Z", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "guesser", "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", "params": ["pg", "e1", "{{guesser}}", "Guesser", "410", "2026-07-05T00:00:00Z", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "guesser", "sql": "SELECT id FROM app_prediction_league__predictions", "expect": { "status": 200, "rowCount": 1 } },
+        { "action": "db", "as": "host", "sql": "UPDATE app_prediction_league__events SET status = 'revealed', correct_answer = ? WHERE id = ?", "params": ["412", "e1"], "expect": { "status": 200 } },
+        { "action": "db", "as": "guesser", "sql": "SELECT id FROM app_prediction_league__predictions", "expect": { "status": 200, "rowCount": 2 } }
+      ]
+    },
+    {
+      "name": "a member can only submit one prediction per event",
+      "members": { "host": "adult", "guesser": "adult" },
+      "steps": [
+        { "action": "db", "as": "host", "sql": "INSERT INTO app_prediction_league__events (id, title, type, status, created_by, created_by_name, created_at) VALUES (?, ?, 'choice', 'open', ?, ?, ?)", "params": ["e2", "Oscars", "{{host}}", "Host", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "guesser", "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", "params": ["g1", "e2", "{{guesser}}", "Guesser", "o1", "2026-07-05T00:00:00Z", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "guesser", "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", "params": ["g2", "e2", "{{guesser}}", "Guesser", "o2", "2026-07-05T00:00:00Z", "2026-07-05T00:00:00Z"], "expect": { "status": 403 } }
+      ]
+    },
+    {
+      "name": "predictions freeze once the event is locked",
+      "members": { "host": "adult", "guesser": "adult" },
+      "steps": [
+        { "action": "db", "as": "host", "sql": "INSERT INTO app_prediction_league__events (id, title, type, status, created_by, created_by_name, created_at) VALUES (?, ?, 'text', 'open', ?, ?, ?)", "params": ["e3", "Game winner", "{{host}}", "Host", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "guesser", "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", "params": ["g3", "e3", "{{guesser}}", "Guesser", "Home team", "2026-07-05T00:00:00Z", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "host", "sql": "UPDATE app_prediction_league__events SET status = 'locked' WHERE id = ?", "params": ["e3"], "expect": { "status": 200 } },
+        { "action": "db", "as": "guesser", "sql": "UPDATE app_prediction_league__predictions SET value = ? WHERE id = ?", "params": ["Away team", "g3"], "expect": { "status": 403 } }
+      ]
+    },
+    {
+      "name": "only adults create and manage events; children may still predict",
+      "members": { "parent": "adult", "kid": "child" },
+      "steps": [
+        { "action": "db", "as": "kid", "sql": "INSERT INTO app_prediction_league__events (id, title, type, status, created_by, created_by_name, created_at) VALUES (?, ?, 'choice', 'open', ?, ?, ?)", "params": ["e4", "Sneaky event", "{{kid}}", "Kid", "2026-07-05T00:00:00Z"], "expect": { "status": 403 } },
+        { "action": "db", "as": "parent", "sql": "INSERT INTO app_prediction_league__events (id, title, type, status, created_by, created_by_name, created_at) VALUES (?, ?, 'choice', 'open', ?, ?, ?)", "params": ["e4", "Movie night pick", "{{parent}}", "Parent", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } },
+        { "action": "db", "as": "kid", "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)", "params": ["k1", "e4", "{{kid}}", "Kid", "o1", "2026-07-05T00:00:00Z", "2026-07-05T00:00:00Z"], "expect": { "status": 200 } }
+      ]
+    }
+  ]
+}

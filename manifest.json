@@ -1,0 +1,61 @@
+{
+  "id": "prediction-league",
+  "name": "Prediction League",
+  "version": "1.0.0",
+  "description": "Everyone predicts the same events — Oscars, the big game, jellybeans in the jar, when the baby arrives. One sealed entry per member per event, frozen when the event locks, revealed together, and scored on a leaderboard.",
+  "entrypoint": "index.html",
+  "runtime": "static",
+  "category": "games",
+  "tags": ["predictions", "games", "leaderboard", "everyone", "sealed"],
+  "data_access": {
+    "reads": ["family.members"],
+    "writes": []
+  },
+  "permissions": {
+    "default_audience": "everyone",
+    "requires_approval": false
+  },
+  "storage": "db",
+  "row_policies": {
+    "events": {
+      "kind": "adult_writable"
+    },
+    "predictions": {
+      "kind": "sealed_until",
+      "fk_column": "event_id",
+      "parent_table": "events",
+      "writer_column": "member_id",
+      "parent_status_column": "status",
+      "visible_parent_status_values": ["revealed"],
+      "unique_per_member": {
+        "member_column": "member_id",
+        "scope_columns": ["event_id"]
+      },
+      "frozen_when": {
+        "status_column": "status",
+        "locked_values": ["locked", "revealed"]
+      }
+    }
+  },
+  "publishes": ["prediction_league.event_created", "prediction_league.event_locked", "prediction_league.event_revealed"],
+  "publish_acls": {
+    "prediction_league.event_created": { "require_role": "adult" },
+    "prediction_league.event_locked": { "require_role": "adult" },
+    "prediction_league.event_revealed": { "require_role": "adult" }
+  },
+  "alert_on": ["prediction_league.event_created", "prediction_league.event_revealed"],
+  "nav": { "label": "Predictions" },
+  "widget": {
+    "label": "Predictions",
+    "size": "small"
+  },
+  "resource_limits": {
+    "max_db_bytes": 52428800
+  },
+  "icon": "🔮",
+  "ai_access": {
+    "allowed": true,
+    "mode": "read",
+    "db_exports": ["events_overview"]
+  }
+}

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction League</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: var(--hub-bg, #f9fafb);
+      --surface: var(--hub-surface, #ffffff);
+      --border: var(--hub-border, #e5e7eb);
+      --border-mid: var(--hub-border, #d1d5db);
+      --text: var(--hub-text, #111827);
+      --muted: var(--hub-text-muted, #6b7280);
+      --accent: var(--hub-primary, #6d28d9);
+      --accent-hover: var(--hub-primary-hover, #5b21b6);
+      --accent-fg: var(--hub-primary-fg, #ffffff);
+      --radius: var(--hub-radius, 8px);
+      --green: #047857;
+      --green-soft: #d1fae5;
+      --amber: #b45309;
+      --amber-soft: #fef3c7;
+      --red: #b91c1c;
+      --red-soft: #fee2e2;
+      --blue-soft: #dbeafe;
+      --purple-soft: #ede9fe;
+      --purple: #6d28d9;
+      --shadow: 0 1px 3px rgba(15, 23, 42, .07);
+    }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--hub-font, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      font-size: var(--hub-font-size, 15px);
+      line-height: 1.5;
+    }
+    .app { max-width: 820px; margin: 0 auto; padding: 16px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    h1 { font-size: 1.35rem; line-height: 1.2; }
+    h2 { font-size: 1rem; margin-bottom: 10px; }
+    h3 { font-size: .9rem; margin-bottom: 8px; }
+    .muted { color: var(--muted); }
+    .tiny { font-size: .78rem; }
+    .stack { display: grid; gap: 12px; }
+    .grid { display: grid; gap: 12px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .event-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+    .event-card:hover { border-color: var(--border-mid); box-shadow: 0 5px 14px rgba(15, 23, 42, .08); }
+    .event-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .event-title { font-weight: 750; font-size: 1rem; }
+    .event-meta { margin-top: 3px; color: var(--muted); font-size: .82rem; }
+    .badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .pill {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 24px; padding: 2px 8px; border-radius: 999px;
+      background: #f1f5f9; color: var(--muted); font-size: .74rem; font-weight: 700; white-space: nowrap;
+    }
+    .pill.good { background: var(--green-soft); color: var(--green); }
+    .pill.warn { background: var(--amber-soft); color: var(--amber); }
+    .pill.info { background: var(--blue-soft); color: #1d4ed8; }
+    .pill.seal { background: var(--purple-soft); color: var(--purple); }
+    .tabs { display: flex; gap: 4px; background: var(--border); padding: 3px; border-radius: 10px; margin-bottom: 14px; }
+    .tab { flex: 1; border: 0; border-radius: 8px; background: transparent; color: var(--muted); padding: 7px; font-weight: 700; cursor: pointer; }
+    .tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin: 6px 2px 10px;
+    }
+    .section-head h2 { margin-bottom: 0; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      border: 1px solid transparent; border-radius: 8px; padding: 8px 12px;
+      font: inherit; font-size: .86rem; font-weight: 700; cursor: pointer;
+      min-height: 38px; background: var(--accent); color: var(--accent-fg);
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:disabled { opacity: .48; cursor: default; }
+    .btn-ghost { background: transparent; color: var(--text); border-color: var(--border-mid); }
+    .btn-ghost:hover { background: #f8fafc; }
+    .btn-danger { background: var(--red-soft); color: var(--red); border-color: transparent; }
+    .btn-danger:hover { background: #fecaca; }
+    .btn-quiet-danger {
+      min-height: 28px; padding: 3px 6px; background: transparent; color: var(--muted);
+      border: 0; font-size: .76rem; font-weight: 700;
+    }
+    .btn-quiet-danger:hover { background: var(--red-soft); color: var(--red); }
+    .btn-sm { min-height: 31px; padding: 5px 9px; font-size: .78rem; }
+    .back { margin-bottom: 10px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .form { display: grid; gap: 10px; }
+    .field { display: grid; gap: 4px; }
+    label { font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 800; }
+    input, textarea, select {
+      width: 100%; border: 1.5px solid var(--border-mid); border-radius: 8px;
+      padding: 9px 11px; font: inherit; background: var(--surface); color: var(--text);
+    }
+    textarea { min-height: 64px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+    .opt-builder { display: grid; gap: 8px; }
+    .opt-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+    .choice-list { display: grid; gap: 8px; }
+    .choice {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border: 1.5px solid var(--border-mid); border-radius: 8px; cursor: pointer;
+    }
+    .choice input { width: auto; }
+    .choice.selected { border-color: var(--accent); background: var(--purple-soft); }
+    .row-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 9px 0; border-top: 1px solid var(--border);
+    }
+    .row-item:first-child { border-top: 0; }
+    .rank { font-weight: 800; color: var(--muted); width: 24px; text-align: center; }
+    .who { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .avatar {
+      width: 26px; height: 26px; border-radius: 50%; flex: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: white; font-size: .74rem; font-weight: 800; background: #6d28d9;
+    }
+    .win-chip { background: var(--green-soft); color: var(--green); }
+    .lead-1 .avatar { box-shadow: 0 0 0 2px #fbbf24; }
+    .empty, .loading { color: var(--muted); text-align: center; padding: 32px 16px; }
+    .error { background: var(--red-soft); color: var(--red); padding: 9px 12px; border-radius: 8px; margin-bottom: 10px; font-size: .86rem; }
+    .notice { background: var(--green-soft); color: var(--green); padding: 9px 12px; border-radius: 8px; margin-bottom: 10px; font-size: .86rem; }
+    .sealed-note { background: var(--purple-soft); color: var(--purple); padding: 10px 12px; border-radius: 8px; font-size: .86rem; font-weight: 600; }
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, .45);
+      display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 50;
+    }
+    .modal {
+      background: var(--surface); border-radius: 12px; box-shadow: 0 20px 45px rgba(15, 23, 42, .25);
+      padding: 18px; width: 100%; max-width: 460px; max-height: 90vh; overflow: auto;
+    }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    @media (min-width: 700px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) {
+      .topbar, .event-head { align-items: stretch; flex-direction: column; }
+      .actions .btn { flex: 1; }
+    }
+  </style>
+  <base href="/run/prediction-league/">
+</head>
+<body>
+<div class="app">
+  <div id="root" class="loading">Loading…</div>
+</div>
+
+<script type="module">
+import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotification, hubAppUrl } from "/hub-sdk.js";
+import {
+  canPredict, canManageEvents, isOpen, isLocked, isRevealed,
+  validatePrediction, displayValue, scoreEvent, computeLeaderboard, numericValue,
+} from "./logic.js";
+
+const CONTEXT = window.__CONTEXT_URL ?? "";
+const DB = window.__DB_URL ?? "";
+const HUB_MEMBER = window.__CURRENT_MEMBER ?? null;
+const EVENTS_URL = window.__EVENTS_URL ?? "/api/events";
+const APP_ID = window.__APP_ID ?? "prediction-league";
+
+let members = [];
+let memberMap = new Map();
+let currentMember = null;
+let events = [];
+let predictions = [];       // own rows for sealed events; everyone's for revealed events
+let selectedEventId = null;
+let tab = "events";         // "events" | "leaderboard"
+let error = "";
+let notice = "";
+
+// draft state for the create form
+let draftType = "choice";
+let draftOptions = ["", ""];
+
+function nowIso() { return new Date().toISOString(); }
+function uid(prefix) { return `${prefix}-${crypto.randomUUID()}`; }
+function today() { return new Date().toISOString().slice(0, 10); }
+
+function hydrateEvent(row) {
+  let options = [];
+  try { options = JSON.parse(row.options_json || "[]"); } catch { options = []; }
+  return { ...row, points: Number(row.points) || 1, options };
+}
+// Prefer the live member name (predictions store member_name, which sealed_until
+// does NOT stamp — so it can be stale or spoofed; identity is member_id).
+function displayName(id, fallback) { return memberMap.get(id)?.name ?? fallback ?? "Someone"; }
+function selectedEvent() { return events.find(e => e.id === selectedEventId) ?? null; }
+function myPrediction(eventId) {
+  return predictions.find(p => p.event_id === eventId && p.member_id === currentMember?.id) ?? null;
+}
+function eventPredictions(eventId) { return predictions.filter(p => p.event_id === eventId); }
+function typeLabel(t) {
+  return { choice: "Multiple choice", number: "Closest number", date: "Closest date", text: "Free answer" }[t] ?? t;
+}
+
+async function dbq(sql, params = []) {
+  if (!DB) return { rows: [] };
+  const res = await fetch(DB, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sql, params }),
+  });
+  const json = await res.json();
+  if (json.error) throw new Error(json.error);
+  return json;
+}
+
+async function loadMembers() {
+  if (!CONTEXT) {
+    members = [
+      { id: "demo-1", name: "Alex", role: "adult" },
+      { id: "demo-2", name: "Jordan", role: "adult" },
+      { id: "demo-3", name: "Casey", role: "child" },
+      { id: "demo-4", name: "Riley", role: "child" },
+    ];
+  } else {
+    const res = await fetch(`${CONTEXT}?keys=family.members`);
+    members = ((await res.json())["family.members"]) ?? [];
+  }
+  memberMap = new Map(members.map(m => [m.id, m]));
+  currentMember = HUB_MEMBER ?? members[0] ?? { id: "guest", name: "Guest", role: "adult" };
+}
+
+function seedDemo() {
+  const openEvent = {
+    id: "demo-oscars", title: "Best Picture at the Oscars",
+    description: "Who takes home the top prize?", type: "choice",
+    options_json: JSON.stringify([
+      { id: "o1", label: "The Grand Voyage" },
+      { id: "o2", label: "Midnight Echoes" },
+      { id: "o3", label: "A Quiet Harvest" },
+    ]),
+    unit: "", correct_answer: null, points: 3, lock_at: "",
+    status: "open", created_by: "demo-1", created_by_name: "Alex", created_at: nowIso(), revealed_at: null,
+  };
+  const jellybeans = {
+    id: "demo-jellybeans", title: "Jellybeans in the jar",
+    description: "Closest guess wins. No going over doesn't matter — just be closest.",
+    type: "number", options_json: "[]", unit: "jellybeans", correct_answer: "412", points: 2, lock_at: "",
+    status: "revealed", created_by: "demo-2", created_by_name: "Jordan", created_at: nowIso(), revealed_at: nowIso(),
+  };
+  events = [openEvent, jellybeans].map(hydrateEvent);
+  predictions = [
+    { id: "p-own", event_id: "demo-oscars", member_id: "demo-1", member_name: "Alex", value: "o1", note: "Gut feeling.", created_at: nowIso(), updated_at: nowIso() },
+    { id: "p1", event_id: "demo-jellybeans", member_id: "demo-1", member_name: "Alex", value: "400", note: "", created_at: nowIso(), updated_at: nowIso() },
+    { id: "p2", event_id: "demo-jellybeans", member_id: "demo-2", member_name: "Jordan", value: "500", note: "", created_at: nowIso(), updated_at: nowIso() },
+    { id: "p3", event_id: "demo-jellybeans", member_id: "demo-3", member_name: "Casey", value: "410", note: "So close!", created_at: nowIso(), updated_at: nowIso() },
+  ];
+}
+
+async function loadData() {
+  if (!DB) { seedDemo(); return; }
+  const [eventRows, predRows] = await Promise.all([
+    dbq("SELECT * FROM app_prediction_league__events WHERE archived = 0 ORDER BY created_at DESC"),
+    // sealed_until: returns the caller's own rows for open/locked events,
+    // plus everyone's rows for revealed events.
+    dbq("SELECT * FROM app_prediction_league__predictions"),
+  ]);
+  events = eventRows.rows.map(hydrateEvent);
+  predictions = predRows.rows;
+}
+
+async function refresh() {
+  clearMessages();
+  try {
+    await Promise.all([loadMembers(), loadData()]);
+    if (selectedEventId && !events.some(e => e.id === selectedEventId)) selectedEventId = null;
+    render();
+  } catch (e) {
+    error = e.message; render();
+  }
+}
+
+function clearMessages() { error = ""; notice = ""; }
+function showError(m) { error = m; notice = ""; render(); }
+function showNotice(m) { notice = m; error = ""; render(); }
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+let modalEl = null;
+function openModal(html) {
+  closeModal();
+  modalEl = document.createElement("div");
+  modalEl.className = "modal-backdrop";
+  modalEl.innerHTML = `<div class="modal">${html}</div>`;
+  modalEl.addEventListener("click", e => { if (e.target === modalEl) closeModal(); });
+  document.body.appendChild(modalEl);
+  const focusEl = modalEl.querySelector("[data-autofocus]");
+  if (focusEl) focusEl.focus();
+}
+function closeModal() { modalEl?.remove(); modalEl = null; }
+
+// ── Side effects ────────────────────────────────────────────────────────────
+function publishEvent(type, subjectId, payload) {
+  fetch(EVENTS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ source_app_id: APP_ID, type, subject_id: subjectId, payload }),
+  }).catch(() => {});
+}
+function logActivity(type, description, eventId) {
+  fetch("/api/activity", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type, actor: currentMember?.name, description,
+      metadata: { deepLink: { appId: APP_ID, params: { eventId } } },
+    }),
+  }).catch(() => {});
+}
+
+// ── Adult: create event ─────────────────────────────────────────────────────
+function setDraftType(t) { draftType = t; render(); }
+function addDraftOption() { draftOptions.push(""); render(); }
+function removeDraftOption(i) {
+  draftOptions.splice(i, 1);
+  if (draftOptions.length < 2) draftOptions.push("");
+  render();
+}
+
+async function createEvent(form) {
+  if (!canManageEvents(currentMember)) return showError("Only adults can create events.");
+  const title = form.title.value.trim();
+  const description = form.description.value.trim();
+  const points = Math.max(1, Number(form.points.value) || 1);
+  const unit = form.unit ? form.unit.value.trim() : "";
+  const lock_at = form.lock_at ? form.lock_at.value : "";
+  if (!title) { form.title.focus(); return showError("Give the event a title."); }
+
+  let options = [];
+  if (draftType === "choice") {
+    options = draftOptions.map(o => o.trim()).filter(Boolean).map(label => ({ id: uid("o"), label }));
+    if (options.length < 2) return showError("Add at least two options.");
+  }
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = "Creating…"; }
+
+  const ev = {
+    id: uid("evt"), title, description, type: draftType,
+    options_json: JSON.stringify(options), unit: draftType === "number" ? unit : "",
+    correct_answer: null, points, lock_at, status: "open",
+    created_by: currentMember.id, created_by_name: currentMember.name, created_at: nowIso(), revealed_at: null,
+  };
+
+  try {
+    if (DB) {
+      await dbq(
+        `INSERT INTO app_prediction_league__events
+          (id, title, description, type, options_json, unit, correct_answer, points, lock_at, status, created_by, created_by_name, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, 'open', ?, ?, ?)`,
+        [ev.id, ev.title, ev.description, ev.type, ev.options_json, ev.unit, ev.points, ev.lock_at, ev.created_by, ev.created_by_name, ev.created_at]
+      );
+    }
+    events = [hydrateEvent(ev), ...events];
+    draftType = "choice"; draftOptions = ["", ""];
+    selectedEventId = ev.id;
+    tab = "events";
+    showNotice("Event created — predictions are open.");
+    publishEvent("prediction_league.event_created", ev.id, { title });
+    logActivity("event_created", `${currentMember.name} opened predictions: "${title}"`, ev.id);
+    sendHubNotification({
+      title: "New prediction",
+      body: `${currentMember.name}: ${title}`,
+      url: hubAppUrl(APP_ID, { eventId: ev.id }),
+    }).catch(() => {});
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "Create event"; }
+    showError(e.message);
+  }
+}
+
+// ── Member: submit / edit a prediction ──────────────────────────────────────
+async function submitPrediction(form) {
+  const event = selectedEvent();
+  if (!event) return;
+  if (!canPredict(event)) return showError("Predictions are closed for this event.");
+  if (!currentMember) return showError("Sign in to predict.");
+
+  let raw;
+  if (event.type === "choice") {
+    const chosen = form.querySelector('input[name="choice"]:checked');
+    raw = chosen ? chosen.value : "";
+  } else {
+    raw = form.value.value;
+  }
+  const note = form.note ? form.note.value.trim() : "";
+  const result = validatePrediction(event, raw);
+  if (!result.ok) return showError(result.error);
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+
+  const existing = myPrediction(event.id);
+  const now = nowIso();
+  try {
+    if (existing) {
+      if (DB) await dbq(
+        `UPDATE app_prediction_league__predictions SET value = ?, note = ?, updated_at = ? WHERE id = ?`,
+        [result.value, note, now, existing.id]
+      );
+      const idx = predictions.findIndex(p => p.id === existing.id);
+      if (idx !== -1) predictions[idx] = { ...predictions[idx], value: result.value, note, updated_at: now };
+      showNotice("Prediction updated.");
+    } else {
+      const pred = {
+        id: uid("pred"), event_id: event.id, member_id: currentMember.id,
+        member_name: currentMember.name, value: result.value, note, created_at: now, updated_at: now,
+      };
+      if (DB) await dbq(
+        `INSERT INTO app_prediction_league__predictions
+          (id, event_id, member_id, member_name, value, note, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [pred.id, pred.event_id, pred.member_id, pred.member_name, pred.value, pred.note, pred.created_at, pred.updated_at]
+      );
+      predictions = [...predictions, pred];
+      showNotice("Prediction locked in — sealed until reveal.");
+    }
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = existing ? "Update prediction" : "Lock it in"; }
+    showError(e.message);
+  }
+}
+
+// ── Adult: lock / reveal / delete ───────────────────────────────────────────
+async function lockEvent(eventId) {
+  if (!canManageEvents(currentMember)) return;
+  const event = events.find(e => e.id === eventId);
+  if (!event || !isOpen(event)) return;
+  const ok = await hubConfirm({
+    message: "Lock this event?",
+    description: "No more predictions can be submitted or changed. Reveal the answer when you're ready.",
+    confirmLabel: "Lock predictions",
+  });
+  if (!ok) return;
+  try {
+    if (DB) await dbq("UPDATE app_prediction_league__events SET status = 'locked' WHERE id = ?", [eventId]);
+    const idx = events.findIndex(e => e.id === eventId);
+    if (idx !== -1) events[idx] = { ...events[idx], status: "locked" };
+    showNotice("Event locked. Predictions are sealed until you reveal.");
+    publishEvent("prediction_league.event_locked", eventId, { title: event.title });
+  } catch (e) { showError(e.message); }
+}
+
+function openRevealModal(eventId) {
+  const event = events.find(e => e.id === eventId);
+  if (!event || !canManageEvents(currentMember)) return;
+  let inputHtml;
+  if (event.type === "choice") {
+    inputHtml = `<select name="answer" data-autofocus>
+      <option value="">Select the winner…</option>
+      ${event.options.map(o => `<option value="${esc(o.id)}">${esc(o.label)}</option>`).join("")}
+    </select>`;
+  } else if (event.type === "number") {
+    inputHtml = `<input name="answer" type="number" step="any" placeholder="Actual number${event.unit ? " (" + esc(event.unit) + ")" : ""}" data-autofocus />`;
+  } else if (event.type === "date") {
+    inputHtml = `<input name="answer" type="date" data-autofocus />`;
+  } else {
+    inputHtml = `<input name="answer" type="text" placeholder="The correct answer" data-autofocus />`;
+  }
+  openModal(`
+    <h2>Reveal "${esc(event.title)}"</h2>
+    <p class="muted tiny" style="margin:6px 0 12px">Enter the real outcome. Everyone's sealed predictions become visible and the leaderboard updates.</p>
+    <form class="form" id="reveal-form" data-event="${esc(eventId)}">
+      <div class="field"><label>Correct answer</label>${inputHtml}</div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button type="submit" class="btn">Reveal & score</button>
+      </div>
+    </form>
+  `);
+};
+
+async function revealEvent(form) {
+  const eventId = form.getAttribute("data-event");
+  const event = events.find(e => e.id === eventId);
+  if (!event || !canManageEvents(currentMember)) return;
+  const raw = form.answer.value;
+  const result = validatePrediction(event, raw);
+  if (!result.ok) { showError(result.error); return; }
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = "Revealing…"; }
+  const now = nowIso();
+  try {
+    if (DB) {
+      await dbq(
+        "UPDATE app_prediction_league__events SET status = 'revealed', correct_answer = ?, revealed_at = ? WHERE id = ?",
+        [result.value, now, eventId]
+      );
+      // reload predictions — reveal makes everyone's rows visible for scoring
+      await loadData();
+    } else {
+      const idx = events.findIndex(e => e.id === eventId);
+      if (idx !== -1) events[idx] = { ...events[idx], status: "revealed", correct_answer: result.value, revealed_at: now };
+    }
+    closeModal();
+    showNotice("Revealed! Scores are in.");
+    publishEvent("prediction_league.event_revealed", eventId, { title: event.title });
+    logActivity("event_revealed", `${currentMember.name} revealed "${event.title}"`, eventId);
+    sendHubNotification({
+      title: "Prediction revealed",
+      body: `Results are in for "${event.title}"`,
+      url: hubAppUrl(APP_ID, { eventId }),
+    }).catch(() => {});
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "Reveal & score"; }
+    showError(e.message);
+  }
+}
+
+// Archive (not hard-delete): sealed predictions are frozen once the event locks,
+// so app SQL can't remove them, and D1 doesn't cascade FK deletes — archiving
+// hides the event and its predictions from every view and the leaderboard.
+async function archiveEvent(eventId) {
+  if (!canManageEvents(currentMember)) return;
+  const event = events.find(e => e.id === eventId);
+  if (!event) return;
+  const ok = await hubConfirm({
+    message: "Archive this event?",
+    description: "It's removed from the league and leaderboard. Sealed predictions can't be deleted once locked, so the event is hidden rather than erased.",
+    confirmLabel: "Archive",
+    destructive: true,
+  });
+  if (!ok) return;
+  try {
+    if (DB) await dbq("UPDATE app_prediction_league__events SET archived = 1 WHERE id = ?", [eventId]);
+    events = events.filter(e => e.id !== eventId);
+    predictions = predictions.filter(p => p.event_id !== eventId);
+    selectedEventId = null;
+    showNotice("Event archived.");
+  } catch (e) { showError(e.message); }
+}
+
+// ── Rendering ────────────────────────────────────────────────────────────────
+function renderMessages() {
+  return `${error ? `<div class="error">${esc(error)}</div>` : ""}${notice ? `<div class="notice">${esc(notice)}</div>` : ""}`;
+}
+
+function statusPill(event) {
+  if (isOpen(event)) return `<span class="pill info">Open</span>`;
+  if (isLocked(event)) return `<span class="pill seal">Sealed</span>`;
+  return `<span class="pill good">Revealed</span>`;
+}
+
+function renderEventCard(event) {
+  const mine = myPrediction(event.id);
+  let right;
+  if (isRevealed(event)) {
+    const { results } = scoreEvent(event, eventPredictions(event.id));
+    const winners = results.filter(r => r.won);
+    right = winners.length
+      ? `<span class="pill good">🏆 ${esc(winners.map(w => displayName(w.member_id, w.member_name)).join(", "))}</span>`
+      : `<span class="pill">No winner</span>`;
+  } else if (mine) {
+    right = `<span class="pill seal">You're in</span>`;
+  } else if (isOpen(event)) {
+    right = `<span class="pill warn">Predict</span>`;
+  } else {
+    right = `<span class="pill">Sealed</span>`;
+  }
+  return `
+    <article class="card event-card" data-open-event="${esc(event.id)}">
+      <div class="event-head">
+        <div>
+          <div class="event-title">${esc(event.title)}</div>
+          <div class="event-meta">${esc(typeLabel(event.type))} · ${event.points} pt${event.points === 1 ? "" : "s"}</div>
+        </div>
+        <div class="badges">${statusPill(event)}${right}</div>
+      </div>
+    </article>
+  `;
+}
+
+function renderEventList() {
+  const order = { open: 0, locked: 1, revealed: 2 };
+  const sorted = [...events].sort((a, b) => (order[a.status] - order[b.status]) || b.created_at.localeCompare(a.created_at));
+  const open = sorted.filter(isOpen);
+  const sealed = sorted.filter(isLocked);
+  const done = sorted.filter(isRevealed);
+  const section = (label, list) => list.length ? `
+    <div class="section-head"><h2>${label}</h2></div>
+    <section class="stack">${list.map(renderEventCard).join("")}</section>` : "";
+  return `
+    <div class="topbar">
+      <div>
+        <h1>🔮 Prediction League</h1>
+        <p class="muted tiny">Everyone vs. the question. Sealed until reveal.</p>
+      </div>
+      ${canManageEvents(currentMember) ? `<button class="btn" data-view-create>New event</button>` : ""}
+    </div>
+    ${renderTabs()}
+    ${renderMessages()}
+    ${events.length ? `${section("Open for predictions", open)}${section("Sealed — awaiting reveal", sealed)}${section("Revealed", done)}`
+      : `<div class="card empty">No events yet.${canManageEvents(currentMember) ? " Create one to get the league going." : ""}</div>`}
+  `;
+}
+
+function renderTabs() {
+  return `
+    <div class="tabs">
+      <button class="tab ${tab === "events" ? "active" : ""}" data-tab="events">Events</button>
+      <button class="tab ${tab === "leaderboard" ? "active" : ""}" data-tab="leaderboard">Leaderboard</button>
+    </div>`;
+}
+
+function renderLeaderboard() {
+  const revealed = events.filter(isRevealed);
+  const byEvent = {};
+  for (const e of revealed) byEvent[e.id] = eventPredictions(e.id);
+  const rows = computeLeaderboard(revealed, byEvent);
+  const body = rows.length ? rows.map((r, i) => `
+    <div class="row-item ${i === 0 ? "lead-1" : ""}">
+      <div class="who">
+        <span class="rank">${i + 1}</span>
+        <span class="avatar" style="background:${esc(memberColor(r.member_id, members))}">${esc(initial(displayName(r.member_id, r.name)))}</span>
+        <div style="min-width:0">
+          <div style="font-weight:700">${esc(displayName(r.member_id, r.name))}</div>
+          <div class="muted tiny">${r.wins} win${r.wins === 1 ? "" : "s"} · ${r.exacts} exact · ${r.played} played</div>
+        </div>
+      </div>
+      <span class="pill ${i === 0 ? "good" : ""}">${r.points} pt${r.points === 1 ? "" : "s"}</span>
+    </div>
+  `).join("") : `<div class="empty">No revealed events yet. The leaderboard fills in as events are revealed.</div>`;
+  return `
+    <div class="topbar">
+      <div><h1>🏆 Leaderboard</h1><p class="muted tiny">Across ${revealed.length} revealed event${revealed.length === 1 ? "" : "s"}.</p></div>
+      ${canManageEvents(currentMember) ? `<button class="btn" data-view-create>New event</button>` : ""}
+    </div>
+    ${renderTabs()}
+    ${renderMessages()}
+    <section class="card">${body}</section>
+  `;
+}
+
+function renderPredictionForm(event) {
+  const mine = myPrediction(event.id);
+  let input;
+  if (event.type === "choice") {
+    input = `<div class="choice-list">
+      ${event.options.map(o => `
+        <label class="choice ${mine && mine.value === o.id ? "selected" : ""}">
+          <input type="radio" name="choice" value="${esc(o.id)}" ${mine && mine.value === o.id ? "checked" : ""} />
+          <span>${esc(o.label)}</span>
+        </label>`).join("")}
+    </div>`;
+  } else if (event.type === "number") {
+    input = `<input name="value" type="number" step="any" placeholder="Your number${event.unit ? " (" + esc(event.unit) + ")" : ""}" value="${esc(mine ? mine.value : "")}" data-autofocus />`;
+  } else if (event.type === "date") {
+    input = `<input name="value" type="date" value="${esc(mine ? mine.value : "")}" data-autofocus />`;
+  } else {
+    input = `<input name="value" type="text" placeholder="Your prediction" value="${esc(mine ? mine.value : "")}" data-autofocus />`;
+  }
+  return `
+    <form class="card form" id="predict-form">
+      <h3>${mine ? "Your sealed prediction" : "Make your prediction"}</h3>
+      <div class="field">${event.type === "choice" ? "" : `<label>Your answer</label>`}${input}</div>
+      <div class="field"><label>Note (optional)</label><input name="note" type="text" placeholder="Reasoning, trash talk…" value="${esc(mine ? mine.note : "")}" /></div>
+      <div class="actions">
+        <button type="submit" class="btn">${mine ? "Update prediction" : "Lock it in"}</button>
+        ${mine ? `<span class="muted tiny">Sealed 🔒 — nobody sees it until reveal.</span>` : ""}
+      </div>
+    </form>`;
+}
+
+function renderResults(event) {
+  const { results } = scoreEvent(event, eventPredictions(event.id));
+  const answer = displayValue(event, event.correct_answer);
+  const rows = results.length ? results.map(r => `
+    <div class="row-item">
+      <div class="who">
+        <span class="avatar" style="background:${esc(memberColor(r.member_id, members))}">${esc(initial(displayName(r.member_id, r.member_name)))}</span>
+        <div style="min-width:0">
+          <div style="font-weight:700">${esc(displayName(r.member_id, r.member_name))} ${r.won ? "🏆" : ""}</div>
+          <div class="muted tiny">${esc(displayValue(event, r.value))}${r.diff !== null && r.diff > 0 ? ` · off by ${esc(formatDiff(event, r.diff))}` : ""}${r.note ? ` · "${esc(r.note)}"` : ""}</div>
+        </div>
+      </div>
+      <span class="pill ${r.won ? "good" : ""}">${r.earned ? "+" + r.earned : "0"}</span>
+    </div>
+  `).join("") : `<div class="empty">No predictions were made.</div>`;
+  return `
+    <section class="card">
+      <div class="event-head" style="margin-bottom:10px">
+        <h3 style="margin:0">Results</h3>
+        <span class="pill good">Answer: ${esc(answer)}</span>
+      </div>
+      ${rows}
+    </section>`;
+}
+
+function formatDiff(event, diff) {
+  if (event.type === "date") {
+    const days = Math.round(diff / 86400000);
+    return `${days} day${days === 1 ? "" : "s"}`;
+  }
+  const n = Number(diff);
+  const base = Number.isInteger(n) ? n.toLocaleString() : n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return event.unit ? `${base} ${event.unit}` : base;
+}
+
+function renderDetail() {
+  const event = selectedEvent();
+  if (!event) return renderEventList();
+  const manage = canManageEvents(currentMember);
+  const mine = myPrediction(event.id);
+
+  let body;
+  if (isRevealed(event)) {
+    body = renderResults(event);
+  } else if (isOpen(event)) {
+    body = renderPredictionForm(event);
+  } else {
+    // locked / sealed
+    body = `<div class="card stack">
+      <div class="sealed-note">🔒 Predictions are sealed. Everyone's answers stay hidden until an adult reveals the outcome.</div>
+      ${mine ? `<div><span class="muted tiny">Your prediction</span><div style="font-weight:700">${esc(displayValue(event, mine.value))}</div>${mine.note ? `<div class="muted tiny">"${esc(mine.note)}"</div>` : ""}</div>`
+        : `<p class="muted tiny">You didn't submit a prediction before it locked.</p>`}
+    </div>`;
+  }
+
+  const adminBar = manage ? `
+    <div class="actions">
+      ${isOpen(event) ? `<button class="btn btn-ghost btn-sm" data-lock="${esc(event.id)}">Lock predictions</button>` : ""}
+      ${isLocked(event) ? `<button class="btn btn-sm" data-reveal="${esc(event.id)}">Reveal answer</button>` : ""}
+      ${isOpen(event) ? `<button class="btn btn-sm" data-reveal="${esc(event.id)}">Reveal now</button>` : ""}
+      <button class="btn btn-quiet-danger" data-archive="${esc(event.id)}">Archive</button>
+    </div>` : "";
+
+  return `
+    <button class="btn btn-ghost btn-sm back" data-back>Back</button>
+    ${renderMessages()}
+    <section class="card stack">
+      <div class="event-head">
+        <div>
+          <h1>${esc(event.title)}</h1>
+          <p class="muted tiny">${esc(typeLabel(event.type))} · ${event.points} pt${event.points === 1 ? "" : "s"} · by ${esc(event.created_by_name)}</p>
+        </div>
+        <div class="badges">${statusPill(event)}</div>
+      </div>
+      ${event.description ? `<p>${esc(event.description)}</p>` : ""}
+      ${event.lock_at && !isRevealed(event) ? `<p class="muted tiny">Closes: ${esc(event.lock_at)}</p>` : ""}
+      ${adminBar}
+    </section>
+    ${body}
+  `;
+}
+
+function renderCreate() {
+  const typeBtn = (t, label) => `<button type="button" class="btn ${draftType === t ? "" : "btn-ghost"} btn-sm" data-set-type="${t}">${esc(label)}</button>`;
+  return `
+    <button class="btn btn-ghost btn-sm back" data-view-list>Back</button>
+    <div class="topbar"><h1>New event</h1></div>
+    ${renderMessages()}
+    <form class="card form" id="create-form">
+      <div class="field"><label for="title">Title</label><input id="title" name="title" placeholder="e.g. Who wins the big game?" data-autofocus required /></div>
+      <div class="field"><label for="description">Details (optional)</label><textarea id="description" name="description" placeholder="Context, rules, deadline…"></textarea></div>
+      <div class="field">
+        <label>Prediction type</label>
+        <div class="actions">${typeBtn("choice", "Multiple choice")}${typeBtn("number", "Closest number")}${typeBtn("date", "Closest date")}${typeBtn("text", "Free answer")}</div>
+      </div>
+      ${draftType === "choice" ? `
+        <div class="field">
+          <label>Options</label>
+          <div class="opt-builder">
+            ${draftOptions.map((o, i) => `
+              <div class="opt-row">
+                <input data-opt="${i}" value="${esc(o)}" placeholder="Option ${i + 1}" />
+                <button type="button" class="btn btn-ghost btn-sm" data-remove-option="${i}">Remove</button>
+              </div>`).join("")}
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" data-add-option style="justify-self:start">Add option</button>
+        </div>` : ""}
+      ${draftType === "number" ? `<div class="field"><label for="unit">Unit (optional)</label><input id="unit" name="unit" placeholder="e.g. jellybeans, points, minutes" /></div>` : ""}
+      <div class="grid two">
+        <div class="field"><label for="points">Points for winning</label><input id="points" name="points" type="number" min="1" value="1" /></div>
+        <div class="field"><label for="lock_at">Closes (optional label)</label><input id="lock_at" name="lock_at" type="date" /></div>
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn">Create event</button>
+      </div>
+    </form>
+  `;
+}
+
+function render() {
+  const root = document.getElementById("root");
+  root.className = "app";
+  if (selectedEventId) { root.innerHTML = renderDetail(); return; }
+  if (tab === "create") { root.innerHTML = renderCreate(); return; }
+  root.innerHTML = tab === "leaderboard" ? renderLeaderboard() : renderEventList();
+}
+
+// ── Events ──────────────────────────────────────────────────────────────────
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("button, [data-open-event]");
+  if (!t) return;
+  const openId = t.getAttribute("data-open-event");
+  if (openId) { selectedEventId = openId; clearMessages(); render(); return; }
+  if (t.hasAttribute("data-close-modal")) { closeModal(); return; }
+  if (t.matches("[data-back]")) { selectedEventId = null; clearMessages(); render(); return; }
+  if (t.matches("[data-view-list]")) { tab = "events"; clearMessages(); render(); return; }
+  if (t.matches("[data-view-create]")) { tab = "create"; clearMessages(); render(); return; }
+  if (t.hasAttribute("data-tab")) { tab = t.getAttribute("data-tab"); selectedEventId = null; clearMessages(); render(); return; }
+  if (t.hasAttribute("data-set-type")) { setDraftType(t.getAttribute("data-set-type")); return; }
+  if (t.hasAttribute("data-add-option")) { addDraftOption(); return; }
+  if (t.hasAttribute("data-remove-option")) { removeDraftOption(Number(t.getAttribute("data-remove-option"))); return; }
+  if (t.hasAttribute("data-lock")) { lockEvent(t.getAttribute("data-lock")); return; }
+  if (t.hasAttribute("data-reveal")) { openRevealModal(t.getAttribute("data-reveal")); return; }
+  if (t.hasAttribute("data-archive")) { archiveEvent(t.getAttribute("data-archive")); return; }
+});
+
+document.addEventListener("input", (e) => {
+  const opt = e.target.closest("[data-opt]");
+  if (opt) { draftOptions[Number(opt.getAttribute("data-opt"))] = opt.value; return; }
+});
+
+document.addEventListener("submit", (e) => {
+  if (e.target.id === "create-form") { e.preventDefault(); createEvent(e.target); return; }
+  if (e.target.id === "predict-form") { e.preventDefault(); submitPrediction(e.target); return; }
+  if (e.target.id === "reveal-form") { e.preventDefault(); revealEvent(e.target); return; }
+});
+
+function handleDeepLink() {
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get("eventId");
+  if (eventId) selectedEventId = eventId;
+}
+
+(async () => {
+  await refresh();
+  handleDeepLink();
+  render();
+})();
+</script>
+</body>
+</html>
