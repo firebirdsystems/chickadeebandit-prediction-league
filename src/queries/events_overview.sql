@@ -14,3 +14,4 @@ FROM app_prediction_league__events
 ORDER BY
   CASE status WHEN 'open' THEN 0 WHEN 'locked' THEN 1 ELSE 2 END,
   created_at DESC
+LIMIT 200
