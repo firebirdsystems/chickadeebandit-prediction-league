@@ -41,7 +41,7 @@ points, wins, and exact hits across all revealed events.
 
 - **`events`** — `adult_writable`: everyone reads, only adults create/lock/reveal.
 - **`predictions`** — `sealed_until` the parent event is `revealed`, with:
-  - `unique_per_member` scoped to `event_id` → one entry per member per event.
+  - `max_per_member` scoped to `event_id` → one entry per member per event.
   - `frozen_when` the parent status is `locked` or `revealed` → entries become
     immutable once the event locks.
 
