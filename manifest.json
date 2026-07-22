@@ -1,5 +1,6 @@
 {
   "id": "prediction-league",
+  "contexts": ["household", "shared_space"],
   "name": "Prediction League",
   "version": "1.0.0",
   "description": "Everyone predicts the same events — Oscars, the big game, jellybeans in the jar, when the baby arrives. One sealed entry per member per event, frozen when the event locks, revealed together, and scored on a leaderboard.",
