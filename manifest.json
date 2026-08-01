@@ -19,7 +19,15 @@
   "storage": "db",
   "row_policies": {
     "events": {
-      "kind": "adult_writable"
+      "kind": "adult_writable",
+      "retain_days": {
+        "default": 730,
+        "timestamp_column": "created_at",
+        "override_key": "event_history",
+        "dependent_tables": [
+          { "table": "predictions", "foreign_key": "event_id" }
+        ]
+      }
     },
     "predictions": {
       "kind": "sealed_until",
@@ -46,6 +54,10 @@
     "prediction_league.event_revealed": { "require_role": "adult" }
   },
   "alert_on": ["prediction_league.event_created", "prediction_league.event_revealed"],
+  "member_references": {
+    "events": { "column": "created_by", "on_removed": "keep" },
+    "predictions": { "column": "member_id", "on_removed": "delete" }
+  },
   "nav": { "label": "Predictions" },
   "widget": {
     "label": "Predictions",
