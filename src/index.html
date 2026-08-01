@@ -145,6 +145,13 @@
       .topbar, .event-head { align-items: stretch; flex-direction: column; }
       .actions .btn { flex: 1; }
     }
+    .search-row { margin-bottom: 12px; }
+    .search-input {
+      width: 100%; border: 1.5px solid var(--border-mid, var(--border, #d1d5db));
+      border-radius: 8px; padding: 9px 11px; font: inherit;
+      background: var(--surface, var(--card, #fff)); color: var(--text, inherit);
+    }
+    .search-input:focus { outline: none; border-color: var(--accent, #6366f1); }
   </style>
   <base href="/run/prediction-league/">
 </head>
@@ -154,10 +161,10 @@
 </div>
 
 <script type="module">
-import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotification, hubAppUrl } from "/hub-sdk.js";
+import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotification, hubAppUrl, searchMatch } from "/hub-sdk.js";
 import {
   canPredict, canManageEvents, isOpen, isLocked, isRevealed,
-  validatePrediction, displayValue, scoreEvent, computeLeaderboard, numericValue,
+  validatePrediction, displayValue, scoreEvent, computeLeaderboard, numericValue, searchableFields,
 } from "./logic.js";
 
 const CONTEXT = window.__CONTEXT_URL ?? "";
@@ -170,6 +177,7 @@ let members = [];
 let memberMap = new Map();
 let currentMember = null;
 let events = [];
+let searchQ = "";       // in-app search (see logic.js searchableFields)
 let predictions = [];       // own rows for sealed events; everyone's for revealed events
 let selectedEventId = null;
 let tab = "events";         // "events" | "leaderboard"
@@ -589,9 +597,20 @@ function renderEventCard(event) {
   `;
 }
 
+// renderEventList is drawn whole, so put the caret back after typing.
+document.addEventListener("input", (e) => {
+  if (e.target.id !== "search") return;
+  searchQ = e.target.value;
+  const caret = e.target.selectionStart;
+  render();
+  const next = document.getElementById("search");
+  if (next) { next.focus(); next.setSelectionRange(caret, caret); }
+});
+
 function renderEventList() {
   const order = { open: 0, locked: 1, revealed: 2 };
-  const sorted = [...events].sort((a, b) => (order[a.status] - order[b.status]) || b.created_at.localeCompare(a.created_at));
+  const matched = searchQ ? events.filter(e => searchMatch(searchQ, searchableFields(e))) : events;
+  const sorted = [...matched].sort((a, b) => (order[a.status] - order[b.status]) || b.created_at.localeCompare(a.created_at));
   const open = sorted.filter(isOpen);
   const sealed = sorted.filter(isLocked);
   const done = sorted.filter(isRevealed);
@@ -608,8 +627,12 @@ function renderEventList() {
     </div>
     ${renderTabs()}
     ${renderMessages()}
-    ${events.length ? `${section("Open for predictions", open)}${section("Sealed — awaiting reveal", sealed)}${section("Revealed", done)}`
-      : `<div class="card empty">No events yet.${canManageEvents(currentMember) ? " Create one to get the league going." : ""}</div>`}
+    ${events.length ? `<div class="search-row"><input id="search" class="search-input" type="search" placeholder="Search events…" aria-label="Search events" value="${esc(searchQ)}" /></div>` : ""}
+    ${!events.length
+      ? `<div class="card empty">No events yet.${canManageEvents(currentMember) ? " Create one to get the league going." : ""}</div>`
+      : sorted.length
+        ? `${section("Open for predictions", open)}${section("Sealed — awaiting reveal", sealed)}${section("Revealed", done)}`
+        : `<div class="card empty">No events match "${esc(searchQ)}".</div>`}
   `;
 }
 

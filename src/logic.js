@@ -182,3 +182,12 @@ export function computeLeaderboard(events, predictionsByEvent) {
     String(a.name).localeCompare(String(b.name))
   );
 }
+
+/**
+ * Fields the in-app search matches against (see hub-sdk `searchMatch`).
+ * The description carries the terms of the question, which is what a
+ * past event is remembered by.
+ */
+export function searchableFields(item) {
+  return [item.title, item.description, item.unit];
+}

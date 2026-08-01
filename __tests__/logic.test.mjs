@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   validatePrediction, scoreEvent, computeLeaderboard, displayValue,
-  numericValue, canPredict, canManageEvents, isRevealed,
+  numericValue, canPredict, canManageEvents, isRevealed, searchableFields,
 } from "../src/logic.js";
 
 const adult = { id: "a", name: "Alex", role: "adult" };
@@ -170,5 +170,12 @@ describe("displayValue", () => {
     expect(displayValue(choiceEvent(), "o3")).toBe("C");
     expect(displayValue({ type: "number", unit: "jellybeans" }, "412")).toBe("412 jellybeans");
     expect(displayValue({ type: "text" }, "")).toBe("—");
+  });
+});
+
+describe("searchableFields", () => {
+  it("matches on the description, which carries the terms of the question", () => {
+    const fields = searchableFields({ title: "Cup final", description: "how many goals in the first half", unit: "goals" });
+    expect(fields).toContain("how many goals in the first half");
   });
 });
