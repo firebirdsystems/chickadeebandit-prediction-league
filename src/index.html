@@ -384,9 +384,12 @@ async function createEvent(form) {
     showNotice("Event created — predictions are open.");
     publishEvent("prediction_league.event_created", ev.id, { title });
     logActivity("event_created", `${currentMember.name} opened predictions: "${title}"`, ev.id);
+    // The event title is whatever the member typed, so it goes to a lock screen
+    // only for recipients who opted into notification previews.
     sendHubNotification({
       title: "New prediction",
       body: `${currentMember.name}: ${title}`,
+      generic: { body: `${currentMember.name} opened a new prediction.` },
       url: hubAppUrl(APP_ID, { eventId: ev.id }),
     }).catch(() => {});
   } catch (e) {
@@ -523,9 +526,12 @@ async function revealEvent(form) {
     showNotice("Revealed! Scores are in.");
     publishEvent("prediction_league.event_revealed", eventId, { title: event.title });
     logActivity("event_revealed", `${currentMember.name} revealed "${event.title}"`, eventId);
+    // Same member-typed title as the creation push above — substitute it here
+    // too, or the string the other notification withheld arrives anyway.
     sendHubNotification({
       title: "Prediction revealed",
       body: `Results are in for "${event.title}"`,
+      generic: { body: "Results are in — tap to see how you did." },
       url: hubAppUrl(APP_ID, { eventId }),
     }).catch(() => {});
   } catch (e) {
