@@ -17,6 +17,9 @@
     "requires_approval": false
   },
   "storage": "db",
+  "preload": {
+    "events": {"sql": "SELECT * FROM app_prediction_league__events WHERE archived = 0 ORDER BY created_at DESC LIMIT 200"}
+  },
   "row_policies": {
     "events": {
       "kind": "adult_writable",
