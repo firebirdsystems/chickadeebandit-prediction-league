@@ -323,16 +323,13 @@ function publishEvent(type, subjectId, payload) {
     body: JSON.stringify({ source_app_id: APP_ID, type, subject_id: subjectId, payload }),
   }).catch(() => {});
 }
-function logActivity(type, description, eventId) {
-  fetch("/api/activity", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      type, actor: currentMember?.name, description,
-      metadata: { deepLink: { appId: APP_ID, params: { eventId } } },
-    }),
-  }).catch(() => {});
-}
+// No activity-feed helper. /api/activity accepts only the hub's own closed
+// ActivityType union (CALLER_ALLOWED_ACTIVITY_TYPES); "event_created" and
+// "event_revealed" are not in it, so every call was refused 403 and no
+// household ever saw an entry — a fetch does not reject on 4xx, so the
+// .catch() hid it. It also sent an `actor` the hub ignores, resolving that
+// from the session instead. The prediction_league.* events published at each
+// site are the sink that works.
 
 // ── Adult: create event ─────────────────────────────────────────────────────
 function setDraftType(t) { draftType = t; render(); }
@@ -383,7 +380,6 @@ async function createEvent(form) {
     tab = "events";
     showNotice("Event created — predictions are open.");
     publishEvent("prediction_league.event_created", ev.id, { title });
-    logActivity("event_created", `${currentMember.name} opened predictions: "${title}"`, ev.id);
     // The event title is whatever the member typed, so it goes to a lock screen
     // only for recipients who opted into notification previews.
     sendHubNotification({
@@ -525,7 +521,6 @@ async function revealEvent(form) {
     closeModal();
     showNotice("Revealed! Scores are in.");
     publishEvent("prediction_league.event_revealed", eventId, { title: event.title });
-    logActivity("event_revealed", `${currentMember.name} revealed "${event.title}"`, eventId);
     // Same member-typed title as the creation push above — substitute it here
     // too, or the string the other notification withheld arrives anyway.
     sendHubNotification({
