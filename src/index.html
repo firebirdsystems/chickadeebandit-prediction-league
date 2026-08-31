@@ -161,7 +161,7 @@
 </div>
 
 <script type="module">
-import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotification, hubAppUrl, searchMatch } from "/hub-sdk.js";
+import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotification, hubAppUrl, searchMatch, hubToday as today } from "/hub-sdk.js";
 import {
   canPredict, canManageEvents, isOpen, isLocked, isRevealed,
   validatePrediction, displayValue, scoreEvent, computeLeaderboard, numericValue, searchableFields,
@@ -190,7 +190,6 @@ let draftOptions = ["", ""];
 
 function nowIso() { return new Date().toISOString(); }
 function uid(prefix) { return `${prefix}-${crypto.randomUUID()}`; }
-function today() { return new Date().toISOString().slice(0, 10); }
 
 function hydrateEvent(row) {
   let options = [];
@@ -586,7 +585,8 @@ function renderEventCard(event) {
     right = `<span class="pill">Sealed</span>`;
   }
   return `
-    <article class="card event-card" data-open-event="${esc(event.id)}">
+    <article class="card event-card" data-testid="event-card" data-event-id="${esc(event.id)}"
+             data-status="${esc(event.status)}" data-mine="${mine ? "yes" : "no"}" data-open-event="${esc(event.id)}">
       <div class="event-head">
         <div>
           <div class="event-title">${esc(event.title)}</div>
@@ -640,8 +640,8 @@ function renderEventList() {
 function renderTabs() {
   return `
     <div class="tabs">
-      <button class="tab ${tab === "events" ? "active" : ""}" data-tab="events">Events</button>
-      <button class="tab ${tab === "leaderboard" ? "active" : ""}" data-tab="leaderboard">Leaderboard</button>
+      <button class="tab ${tab === "events" ? "active" : ""}" data-testid="tab-events" data-tab="events">Events</button>
+      <button class="tab ${tab === "leaderboard" ? "active" : ""}" data-testid="tab-leaderboard" data-tab="leaderboard">Leaderboard</button>
     </div>`;
 }
 
@@ -651,7 +651,7 @@ function renderLeaderboard() {
   for (const e of revealed) byEvent[e.id] = eventPredictions(e.id);
   const rows = computeLeaderboard(revealed, byEvent);
   const body = rows.length ? rows.map((r, i) => `
-    <div class="row-item ${i === 0 ? "lead-1" : ""}">
+    <div class="row-item ${i === 0 ? "lead-1" : ""}" data-testid="leader-row" data-points="${esc(String(r.points))}">
       <div class="who">
         <span class="rank">${i + 1}</span>
         <span class="avatar" style="background:${esc(memberColor(r.member_id, members))}">${esc(initial(displayName(r.member_id, r.name)))}</span>
@@ -708,7 +708,7 @@ function renderResults(event) {
   const { results } = scoreEvent(event, eventPredictions(event.id));
   const answer = displayValue(event, event.correct_answer);
   const rows = results.length ? results.map(r => `
-    <div class="row-item">
+    <div class="row-item" data-testid="result-row" data-won="${r.won ? "yes" : "no"}" data-earned="${esc(String(r.earned))}">
       <div class="who">
         <span class="avatar" style="background:${esc(memberColor(r.member_id, members))}">${esc(initial(displayName(r.member_id, r.member_name)))}</span>
         <div style="min-width:0">
@@ -720,10 +720,10 @@ function renderResults(event) {
     </div>
   `).join("") : `<div class="empty">No predictions were made.</div>`;
   return `
-    <section class="card">
+    <section class="card" data-testid="results">
       <div class="event-head" style="margin-bottom:10px">
         <h3 style="margin:0">Results</h3>
-        <span class="pill good">Answer: ${esc(answer)}</span>
+        <span class="pill good" data-testid="result-answer">Answer: ${esc(answer)}</span>
       </div>
       ${rows}
     </section>`;
@@ -753,7 +753,7 @@ function renderDetail() {
   } else {
     // locked / sealed
     body = `<div class="card stack">
-      <div class="sealed-note">🔒 Predictions are sealed. Everyone's answers stay hidden until an adult reveals the outcome.</div>
+      <div class="sealed-note" data-testid="sealed-note">🔒 Predictions are sealed. Everyone's answers stay hidden until an adult reveals the outcome.</div>
       ${mine ? `<div><span class="muted tiny">Your prediction</span><div style="font-weight:700">${esc(displayValue(event, mine.value))}</div>${mine.note ? `<div class="muted tiny">"${esc(mine.note)}"</div>` : ""}</div>`
         : `<p class="muted tiny">You didn't submit a prediction before it locked.</p>`}
     </div>`;
@@ -768,9 +768,9 @@ function renderDetail() {
     </div>` : "";
 
   return `
-    <button class="btn btn-ghost btn-sm back" data-back>Back</button>
+    <button class="btn btn-ghost btn-sm back" data-testid="detail-back" data-back>Back</button>
     ${renderMessages()}
-    <section class="card stack">
+    <section class="card stack" data-testid="event-detail" data-event-id="${esc(event.id)}">
       <div class="event-head">
         <div>
           <h1>${esc(event.title)}</h1>

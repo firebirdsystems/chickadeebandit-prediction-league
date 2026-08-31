@@ -1,0 +1,290 @@
+{
+  "scenarios": [
+    {
+      "name": "a sealed event hides every prediction but the member's own, and the reveal scores them all",
+      "members": {
+        "host": "admin",
+        "player": "adult"
+      },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at) VALUES (?, ?, ?, 'number', ?, ?, 3, 'locked', ?, ?, datetime('now'))",
+          "params": [
+            "ui-e1",
+            "How many jellybeans in the jar?",
+            "Guess before Sunday",
+            "[]",
+            "jellybeans",
+            "{{host}}",
+            "Host"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))",
+          "params": [
+            "ui-p1a",
+            "ui-e1",
+            "{{player}}",
+            "Player",
+            "180",
+            "Gut feeling"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))",
+          "params": [
+            "ui-p1b",
+            "ui-e1",
+            "{{host}}",
+            "Host",
+            "200",
+            "Counted a corner and multiplied"
+          ]
+        },
+        {
+          "action": "open",
+          "as": "player"
+        },
+        {
+          "action": "waitFor",
+          "selector": "[data-testid=\"event-card\"][data-event-id=\"ui-e1\"]",
+          "as": "player"
+        },
+        {
+          "action": "expectVisible",
+          "selector": "[data-testid=\"event-card\"][data-event-id=\"ui-e1\"][data-mine=\"yes\"]",
+          "as": "player"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid=\"event-card\"][data-event-id=\"ui-e1\"]",
+          "as": "player"
+        },
+        {
+          "action": "waitFor",
+          "selector": "[data-testid=\"event-detail\"][data-event-id=\"ui-e1\"]",
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"result-row\"]",
+          "count": 0,
+          "as": "player"
+        },
+        {
+          "action": "expectVisible",
+          "selector": "[data-testid=\"sealed-note\"]",
+          "as": "player"
+        },
+        {
+          "action": "seedRaw",
+          "sql": "UPDATE app_prediction_league__events SET status = 'revealed', correct_answer = ? WHERE id = ?",
+          "params": [
+            "250",
+            "ui-e1"
+          ]
+        },
+        {
+          "action": "reload",
+          "as": "player"
+        },
+        {
+          "action": "waitFor",
+          "selector": "[data-testid=\"event-card\"][data-event-id=\"ui-e1\"]",
+          "as": "player"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid=\"event-card\"][data-event-id=\"ui-e1\"]",
+          "as": "player"
+        },
+        {
+          "action": "waitFor",
+          "selector": "[data-testid=\"results\"]",
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"result-row\"]",
+          "count": 2,
+          "as": "player"
+        },
+        {
+          "action": "expectText",
+          "selector": "[data-testid=\"result-answer\"]",
+          "text": "250",
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"result-row\"][data-won=\"yes\"]",
+          "count": 1,
+          "as": "player"
+        },
+        {
+          "action": "expectText",
+          "selector": "[data-testid=\"results\"]",
+          "text": "Counted a corner and multiplied",
+          "as": "player"
+        }
+      ]
+    },
+    {
+      "name": "the browser scores the closest guess and leaves an unrevealed event out of the standings",
+      "members": {
+        "host": "admin",
+        "player": "adult"
+      },
+      "steps": [
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, correct_answer, points, status, created_by, created_by_name, created_at) VALUES (?, ?, ?, 'number', ?, ?, ?, 5, 'revealed', ?, ?, datetime('now'))",
+          "params": [
+            "ui-e2",
+            "How many steps to the lighthouse?",
+            "Closest wins",
+            "[]",
+            "steps",
+            "250",
+            "{{host}}",
+            "Host"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))",
+          "params": [
+            "ui-p2a",
+            "ui-e2",
+            "{{player}}",
+            "Player",
+            "249",
+            "One under, on purpose"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))",
+          "params": [
+            "ui-p2b",
+            "ui-e2",
+            "{{host}}",
+            "Host",
+            "300",
+            "Rounded up generously"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at) VALUES (?, ?, ?, 'number', ?, ?, 7, 'locked', ?, ?, datetime('now'))",
+          "params": [
+            "ui-e3",
+            "How many pigeons on the roof?",
+            "Nobody has counted",
+            "[]",
+            "pigeons",
+            "{{host}}",
+            "Host"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))",
+          "params": [
+            "ui-p3a",
+            "ui-e3",
+            "{{player}}",
+            "Player",
+            "10",
+            "A round ten"
+          ]
+        },
+        {
+          "action": "seedRaw",
+          "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))",
+          "params": [
+            "ui-p3b",
+            "ui-e3",
+            "{{host}}",
+            "Host",
+            "99",
+            "Loads of them"
+          ]
+        },
+        {
+          "action": "open",
+          "as": "player"
+        },
+        {
+          "action": "waitFor",
+          "selector": "[data-testid=\"event-card\"][data-event-id=\"ui-e2\"]",
+          "as": "player"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid=\"event-card\"][data-event-id=\"ui-e2\"]",
+          "as": "player"
+        },
+        {
+          "action": "waitFor",
+          "selector": "[data-testid=\"results\"]",
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"result-row\"][data-won=\"yes\"][data-earned=\"5\"]",
+          "count": 1,
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"result-row\"][data-won=\"no\"][data-earned=\"0\"]",
+          "count": 1,
+          "as": "player"
+        },
+        {
+          "action": "expectText",
+          "selector": "[data-testid=\"result-answer\"]",
+          "text": "250",
+          "as": "player"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid=\"detail-back\"]",
+          "as": "player"
+        },
+        {
+          "action": "waitFor",
+          "selector": "[data-testid=\"tab-leaderboard\"]",
+          "as": "player"
+        },
+        {
+          "action": "click",
+          "selector": "[data-testid=\"tab-leaderboard\"]",
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"leader-row\"]",
+          "count": 2,
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"leader-row\"][data-points=\"5\"]",
+          "count": 1,
+          "as": "player"
+        },
+        {
+          "action": "expectCount",
+          "selector": "[data-testid=\"leader-row\"][data-points=\"0\"]",
+          "count": 1,
+          "as": "player"
+        }
+      ]
+    }
+  ]
+}
