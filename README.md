@@ -1,5 +1,7 @@
 # Prediction League 🔮
 
+A [Chickadee Bandit](https://chickadeebandit.com/app-library/prediction-league) app.
+
 Everyone predicts the same events — Oscars, the big game, "how many jellybeans in
 the jar," "when will the baby arrive" — with **one sealed entry per member per
 event**. Predictions stay hidden until an adult reveals the outcome, then they're
