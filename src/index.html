@@ -161,7 +161,7 @@
 </div>
 
 <script type="module">
-import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotification, hubAppUrl, searchMatch, hubToday as today } from "/hub-sdk.js";
+import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotification, hubAppUrl, searchMatch, hubToday as today, glyph } from "/hub-sdk.js";
 import {
   canPredict, canManageEvents, isOpen, isLocked, isRevealed,
   validatePrediction, displayValue, scoreEvent, computeLeaderboard, numericValue, searchableFields,
@@ -575,7 +575,7 @@ function renderEventCard(event) {
     const { results } = scoreEvent(event, eventPredictions(event.id));
     const winners = results.filter(r => r.won);
     right = winners.length
-      ? `<span class="pill good">🏆 ${esc(winners.map(w => displayName(w.member_id, w.member_name)).join(", "))}</span>`
+      ? `<span class="pill good">${glyph("trophy", { accent: "currentColor" })} ${esc(winners.map(w => displayName(w.member_id, w.member_name)).join(", "))}</span>`
       : `<span class="pill">No winner</span>`;
   } else if (mine) {
     right = `<span class="pill seal">You're in</span>`;
@@ -621,7 +621,7 @@ function renderEventList() {
   return `
     <div class="topbar">
       <div>
-        <h1>🔮 Prediction League</h1>
+        <h1>${glyph("crystal-ball")} Prediction League</h1>
         <p class="muted tiny">Everyone vs. the question. Sealed until reveal.</p>
       </div>
       ${canManageEvents(currentMember) ? `<button class="btn" data-view-create>New event</button>` : ""}
@@ -665,7 +665,7 @@ function renderLeaderboard() {
   `).join("") : `<div class="empty">No revealed events yet. The leaderboard fills in as events are revealed.</div>`;
   return `
     <div class="topbar">
-      <div><h1>🏆 Leaderboard</h1><p class="muted tiny">Across ${revealed.length} revealed event${revealed.length === 1 ? "" : "s"}.</p></div>
+      <div><h1>${glyph("trophy")} Leaderboard</h1><p class="muted tiny">Across ${revealed.length} revealed event${revealed.length === 1 ? "" : "s"}.</p></div>
       ${canManageEvents(currentMember) ? `<button class="btn" data-view-create>New event</button>` : ""}
     </div>
     ${renderTabs()}
@@ -699,7 +699,7 @@ function renderPredictionForm(event) {
       <div class="field"><label>Note (optional)</label><input name="note" type="text" placeholder="Reasoning, trash talk…" value="${esc(mine ? mine.note : "")}" /></div>
       <div class="actions">
         <button type="submit" class="btn">${mine ? "Update prediction" : "Lock it in"}</button>
-        ${mine ? `<span class="muted tiny">Sealed 🔒 — nobody sees it until reveal.</span>` : ""}
+        ${mine ? `<span class="muted tiny">Sealed ${glyph("lock")} — nobody sees it until reveal.</span>` : ""}
       </div>
     </form>`;
 }
@@ -712,7 +712,7 @@ function renderResults(event) {
       <div class="who">
         <span class="avatar" style="background:${esc(memberColor(r.member_id, members))}">${esc(initial(displayName(r.member_id, r.member_name)))}</span>
         <div style="min-width:0">
-          <div style="font-weight:700">${esc(displayName(r.member_id, r.member_name))} ${r.won ? "🏆" : ""}</div>
+          <div style="font-weight:700">${esc(displayName(r.member_id, r.member_name))} ${r.won ? glyph("trophy") : ""}</div>
           <div class="muted tiny">${esc(displayValue(event, r.value))}${r.diff !== null && r.diff > 0 ? ` · off by ${esc(formatDiff(event, r.diff))}` : ""}${r.note ? ` · "${esc(r.note)}"` : ""}</div>
         </div>
       </div>
@@ -753,7 +753,7 @@ function renderDetail() {
   } else {
     // locked / sealed
     body = `<div class="card stack">
-      <div class="sealed-note" data-testid="sealed-note">🔒 Predictions are sealed. Everyone's answers stay hidden until an adult reveals the outcome.</div>
+      <div class="sealed-note" data-testid="sealed-note">${glyph("lock")} Predictions are sealed. Everyone's answers stay hidden until an adult reveals the outcome.</div>
       ${mine ? `<div><span class="muted tiny">Your prediction</span><div style="font-weight:700">${esc(displayValue(event, mine.value))}</div>${mine.note ? `<div class="muted tiny">"${esc(mine.note)}"</div>` : ""}</div>`
         : `<p class="muted tiny">You didn't submit a prediction before it locked.</p>`}
     </div>`;
