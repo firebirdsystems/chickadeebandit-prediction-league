@@ -265,24 +265,23 @@ function seedDemo() {
 
 async function loadData() {
   if (!DB) { seedDemo(); return; }
-  const eventRows = await dbq("SELECT * FROM app_prediction_league__events WHERE archived = 0 ORDER BY created_at DESC LIMIT 200");
-  events = eventRows.rows.map(hydrateEvent);
-  // Predictions for exactly the events we loaded. This was previously an
-  // unscoped, unlimited `SELECT * FROM predictions` — and because "archive" is a
-  // soft flag (frozen_when makes a locked event's predictions immutable, so app
-  // SQL can never delete them), every archived event's predictions were still
-  // fetched on every load and thrown away client-side. The table only ever grew.
-  // retain_days on `events` now reclaims them; this bounds what we read meanwhile.
+  // Predictions for the events that are not archived, asked for beside the
+  // events themselves: a JOIN on the same `archived = 0` the events read uses,
+  // not the ids of events already in hand, so both come with the document.
+  // (An unscoped `SELECT * FROM predictions` is what this replaced long ago —
+  // archive is a soft flag and frozen_when keeps a locked event's predictions,
+  // so that table only grows until retain_days reclaims it.)
   //
-  // sealed_until: returns the caller's own rows for open/locked events, plus
-  // everyone's rows for revealed events.
-  if (!events.length) { predictions = []; return; }
-  const ids = events.map(e => e.id);
-  const predRows = await dbq(
-    `SELECT * FROM app_prediction_league__predictions WHERE event_id IN (${ids.map(() => "?").join(",")})`,
-    ids,
-  );
-  predictions = predRows.rows;
+  // sealed_until still applies through the join: the caller's own rows for
+  // open/locked events, plus everyone's rows for revealed events.
+  const [eventRows, predRows] = await Promise.all([
+    dbq("SELECT * FROM app_prediction_league__events WHERE archived = 0 ORDER BY created_at DESC LIMIT 200"),
+    dbq("SELECT p.* FROM app_prediction_league__predictions p JOIN app_prediction_league__events e ON e.id = p.event_id WHERE e.archived = 0"),
+  ]);
+  events = eventRows.rows.map(hydrateEvent);
+  // The events read is capped at 200 and the join is not.
+  const loaded = new Set(events.map(e => e.id));
+  predictions = predRows.rows.filter(p => loaded.has(p.event_id));
 }
 
 async function refresh() {

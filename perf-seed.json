@@ -1,0 +1,1676 @@
+{
+ "seed": [
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, points, status, created_by, created_by_name, created_at, lock_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-0.3 days','+0 minutes'), ?)",
+   "params": [
+    "perf-evt-01",
+    "Who wins the cup final?",
+    "Lock in before kick-off",
+    "choice",
+    "[{\"id\":\"perf-evt-01-o1\",\"label\":\"City\"},{\"id\":\"perf-evt-01-o2\",\"label\":\"United\"},{\"id\":\"perf-evt-01-o3\",\"label\":\"Draw after extra time\"}]",
+    3,
+    "open",
+    "{{me}}",
+    "Sam",
+    "{{date:3}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-0.3 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-0.3 days','+30 minutes'))",
+   "params": [
+    "perf-evt-01-p1",
+    "perf-evt-01",
+    "{{me}}",
+    "Sam",
+    "perf-evt-01-o1",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-0.3 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-0.3 days','+170 minutes'))",
+   "params": [
+    "perf-evt-01-p3",
+    "perf-evt-01",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-01-o1",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-0.3 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-0.3 days','+240 minutes'))",
+   "params": [
+    "perf-evt-01-p4",
+    "perf-evt-01",
+    "{{child}}",
+    "Mia",
+    "perf-evt-01-o3"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+0 minutes'))",
+   "params": [
+    "perf-evt-02",
+    "How many trick-or-treaters this year?",
+    "Closest guess wins",
+    "number",
+    "[]",
+    "kids",
+    2,
+    "open",
+    "{{partner}}",
+    "Jordan"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+30 minutes'))",
+   "params": [
+    "perf-evt-02-p1",
+    "perf-evt-02",
+    "{{me}}",
+    "Sam",
+    "45"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+100 minutes'))",
+   "params": [
+    "perf-evt-02-p2",
+    "perf-evt-02",
+    "{{partner}}",
+    "Jordan",
+    "60",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+170 minutes'))",
+   "params": [
+    "perf-evt-02-p3",
+    "perf-evt-02",
+    "{{adult2}}",
+    "Robin",
+    "38"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-1 days','+310 minutes'))",
+   "params": [
+    "perf-evt-02-p5",
+    "perf-evt-02",
+    "{{child2}}",
+    "Leo",
+    "72",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, lock_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+0 minutes'), ?)",
+   "params": [
+    "perf-evt-03",
+    "When will the first snow fall?",
+    "date",
+    "[]",
+    3,
+    "open",
+    "{{me}}",
+    "Sam",
+    "{{date:5}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+30 minutes'))",
+   "params": [
+    "perf-evt-03-p1",
+    "perf-evt-03",
+    "{{me}}",
+    "Sam",
+    "{{date:40}}",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+100 minutes'))",
+   "params": [
+    "perf-evt-03-p2",
+    "perf-evt-03",
+    "{{partner}}",
+    "Jordan",
+    "{{date:52}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+240 minutes'))",
+   "params": [
+    "perf-evt-03-p4",
+    "perf-evt-03",
+    "{{child}}",
+    "Mia",
+    "{{date:61}}",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-2 days','+310 minutes'))",
+   "params": [
+    "perf-evt-03-p5",
+    "perf-evt-03",
+    "{{child2}}",
+    "Leo",
+    "{{date:47}}",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-4 days','+0 minutes'))",
+   "params": [
+    "perf-evt-04",
+    "What will grandma bring for dessert?",
+    "text",
+    "[]",
+    1,
+    "open",
+    "{{adult2}}",
+    "Robin"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-4 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-4 days','+30 minutes'))",
+   "params": [
+    "perf-evt-04-p1",
+    "perf-evt-04",
+    "{{me}}",
+    "Sam",
+    "Apple pie"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-4 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-4 days','+170 minutes'))",
+   "params": [
+    "perf-evt-04-p3",
+    "perf-evt-04",
+    "{{adult2}}",
+    "Robin",
+    "Apple pie",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-4 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-4 days','+240 minutes'))",
+   "params": [
+    "perf-evt-04-p4",
+    "perf-evt-04",
+    "{{child}}",
+    "Mia",
+    "Cookies",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at, lock_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+0 minutes'), ?)",
+   "params": [
+    "perf-evt-05",
+    "How long will the road trip take?",
+    "Door to door, in minutes",
+    "number",
+    "[]",
+    "minutes",
+    2,
+    "locked",
+    "{{me}}",
+    "Sam",
+    "{{date:7}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+30 minutes'))",
+   "params": [
+    "perf-evt-05-p1",
+    "perf-evt-05",
+    "{{me}}",
+    "Sam",
+    "310",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+100 minutes'))",
+   "params": [
+    "perf-evt-05-p2",
+    "perf-evt-05",
+    "{{partner}}",
+    "Jordan",
+    "295",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+170 minutes'))",
+   "params": [
+    "perf-evt-05-p3",
+    "perf-evt-05",
+    "{{adult2}}",
+    "Robin",
+    "340",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+240 minutes'))",
+   "params": [
+    "perf-evt-05-p4",
+    "perf-evt-05",
+    "{{child}}",
+    "Mia",
+    "360"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+310 minutes'))",
+   "params": [
+    "perf-evt-05-p5",
+    "perf-evt-05",
+    "{{child2}}",
+    "Leo",
+    "300",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+0 minutes'))",
+   "params": [
+    "perf-evt-06",
+    "Who loses a tooth next?",
+    "choice",
+    "[{\"id\":\"perf-evt-06-o1\",\"label\":\"Mia\"},{\"id\":\"perf-evt-06-o2\",\"label\":\"Leo\"},{\"id\":\"perf-evt-06-o3\",\"label\":\"Nobody before Christmas\"}]",
+    1,
+    "locked",
+    "{{partner}}",
+    "Jordan"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+30 minutes'))",
+   "params": [
+    "perf-evt-06-p1",
+    "perf-evt-06",
+    "{{me}}",
+    "Sam",
+    "perf-evt-06-o1",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+100 minutes'))",
+   "params": [
+    "perf-evt-06-p2",
+    "perf-evt-06",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-06-o2",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+170 minutes'))",
+   "params": [
+    "perf-evt-06-p3",
+    "perf-evt-06",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-06-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+240 minutes'))",
+   "params": [
+    "perf-evt-06-p4",
+    "perf-evt-06",
+    "{{child}}",
+    "Mia",
+    "perf-evt-06-o1",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-8 days','+310 minutes'))",
+   "params": [
+    "perf-evt-06-p5",
+    "perf-evt-06",
+    "{{child2}}",
+    "Leo",
+    "perf-evt-06-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-6 days','+0 minutes'))",
+   "params": [
+    "perf-evt-07",
+    "How many jellybeans in the jar?",
+    "Guess before Sunday",
+    "number",
+    "[]",
+    "jellybeans",
+    3,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "431"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+100 minutes'))",
+   "params": [
+    "perf-evt-07-p2",
+    "perf-evt-07",
+    "{{partner}}",
+    "Jordan",
+    "380"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+170 minutes'))",
+   "params": [
+    "perf-evt-07-p3",
+    "perf-evt-07",
+    "{{adult2}}",
+    "Robin",
+    "500",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+240 minutes'))",
+   "params": [
+    "perf-evt-07-p4",
+    "perf-evt-07",
+    "{{child}}",
+    "Mia",
+    "250"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-10 days','+310 minutes'))",
+   "params": [
+    "perf-evt-07-p5",
+    "perf-evt-07",
+    "{{child2}}",
+    "Leo",
+    "445",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-12 days','+0 minutes'))",
+   "params": [
+    "perf-evt-08",
+    "Best picture at the awards?",
+    "choice",
+    "[{\"id\":\"perf-evt-08-o1\",\"label\":\"The epic\"},{\"id\":\"perf-evt-08-o2\",\"label\":\"The quiet drama\"},{\"id\":\"perf-evt-08-o3\",\"label\":\"The musical\"},{\"id\":\"perf-evt-08-o4\",\"label\":\"The animated one\"}]",
+    3,
+    "revealed",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-08-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+30 minutes'))",
+   "params": [
+    "perf-evt-08-p1",
+    "perf-evt-08",
+    "{{me}}",
+    "Sam",
+    "perf-evt-08-o1"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+100 minutes'))",
+   "params": [
+    "perf-evt-08-p2",
+    "perf-evt-08",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-08-o2",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+170 minutes'))",
+   "params": [
+    "perf-evt-08-p3",
+    "perf-evt-08",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-08-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+240 minutes'))",
+   "params": [
+    "perf-evt-08-p4",
+    "perf-evt-08",
+    "{{child}}",
+    "Mia",
+    "perf-evt-08-o4",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-16 days','+310 minutes'))",
+   "params": [
+    "perf-evt-08-p5",
+    "perf-evt-08",
+    "{{child2}}",
+    "Leo",
+    "perf-evt-08-o3",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-18 days','+0 minutes'))",
+   "params": [
+    "perf-evt-09",
+    "When does the baby cousin arrive?",
+    "Due date is the 14th",
+    "date",
+    "[]",
+    3,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "{{date:-20}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+30 minutes'))",
+   "params": [
+    "perf-evt-09-p1",
+    "perf-evt-09",
+    "{{me}}",
+    "Sam",
+    "{{date:-22}}",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+100 minutes'))",
+   "params": [
+    "perf-evt-09-p2",
+    "perf-evt-09",
+    "{{partner}}",
+    "Jordan",
+    "{{date:-19}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+170 minutes'))",
+   "params": [
+    "perf-evt-09-p3",
+    "perf-evt-09",
+    "{{adult2}}",
+    "Robin",
+    "{{date:-25}}",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+240 minutes'))",
+   "params": [
+    "perf-evt-09-p4",
+    "perf-evt-09",
+    "{{child}}",
+    "Mia",
+    "{{date:-20}}",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-22 days','+310 minutes'))",
+   "params": [
+    "perf-evt-09-p5",
+    "perf-evt-09",
+    "{{child2}}",
+    "Leo",
+    "{{date:-17}}",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-24 days','+0 minutes'))",
+   "params": [
+    "perf-evt-10",
+    "Who wins family game night?",
+    "text",
+    "[]",
+    1,
+    "revealed",
+    "{{partner}}",
+    "Jordan",
+    "Mia"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+30 minutes'))",
+   "params": [
+    "perf-evt-10-p1",
+    "perf-evt-10",
+    "{{me}}",
+    "Sam",
+    "Mia"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+100 minutes'))",
+   "params": [
+    "perf-evt-10-p2",
+    "perf-evt-10",
+    "{{partner}}",
+    "Jordan",
+    "Dad",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+170 minutes'))",
+   "params": [
+    "perf-evt-10-p3",
+    "perf-evt-10",
+    "{{adult2}}",
+    "Robin",
+    "Mia",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-28 days','+240 minutes'))",
+   "params": [
+    "perf-evt-10-p4",
+    "perf-evt-10",
+    "{{child}}",
+    "Mia",
+    "Leo",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-30 days','+0 minutes'))",
+   "params": [
+    "perf-evt-11",
+    "How many goals in Saturday's match?",
+    "number",
+    "[]",
+    "goals",
+    1,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "4"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+30 minutes'))",
+   "params": [
+    "perf-evt-11-p1",
+    "perf-evt-11",
+    "{{me}}",
+    "Sam",
+    "3",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+100 minutes'))",
+   "params": [
+    "perf-evt-11-p2",
+    "perf-evt-11",
+    "{{partner}}",
+    "Jordan",
+    "2",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+170 minutes'))",
+   "params": [
+    "perf-evt-11-p3",
+    "perf-evt-11",
+    "{{adult2}}",
+    "Robin",
+    "5",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-34 days','+310 minutes'))",
+   "params": [
+    "perf-evt-11-p5",
+    "perf-evt-11",
+    "{{child2}}",
+    "Leo",
+    "1",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-36 days','+0 minutes'))",
+   "params": [
+    "perf-evt-12",
+    "Which team wins the league?",
+    "choice",
+    "[{\"id\":\"perf-evt-12-o1\",\"label\":\"Rovers\"},{\"id\":\"perf-evt-12-o2\",\"label\":\"Athletic\"},{\"id\":\"perf-evt-12-o3\",\"label\":\"Wanderers\"}]",
+    5,
+    "revealed",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-12-o1"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+30 minutes'))",
+   "params": [
+    "perf-evt-12-p1",
+    "perf-evt-12",
+    "{{me}}",
+    "Sam",
+    "perf-evt-12-o1",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+100 minutes'))",
+   "params": [
+    "perf-evt-12-p2",
+    "perf-evt-12",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-12-o1",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+240 minutes'))",
+   "params": [
+    "perf-evt-12-p4",
+    "perf-evt-12",
+    "{{child}}",
+    "Mia",
+    "perf-evt-12-o2",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-40 days','+310 minutes'))",
+   "params": [
+    "perf-evt-12-p5",
+    "perf-evt-12",
+    "{{child2}}",
+    "Leo",
+    "perf-evt-12-o1"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-42 days','+0 minutes'))",
+   "params": [
+    "perf-evt-13",
+    "How many tomatoes from the garden this season?",
+    "number",
+    "[]",
+    "tomatoes",
+    2,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "137"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+30 minutes'))",
+   "params": [
+    "perf-evt-13-p1",
+    "perf-evt-13",
+    "{{me}}",
+    "Sam",
+    "120",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+170 minutes'))",
+   "params": [
+    "perf-evt-13-p3",
+    "perf-evt-13",
+    "{{adult2}}",
+    "Robin",
+    "200",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+240 minutes'))",
+   "params": [
+    "perf-evt-13-p4",
+    "perf-evt-13",
+    "{{child}}",
+    "Mia",
+    "150"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-46 days','+310 minutes'))",
+   "params": [
+    "perf-evt-13-p5",
+    "perf-evt-13",
+    "{{child2}}",
+    "Leo",
+    "64",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-48 days','+0 minutes'))",
+   "params": [
+    "perf-evt-14",
+    "When does the heating go on?",
+    "First day someone gives in",
+    "date",
+    "[]",
+    2,
+    "revealed",
+    "{{partner}}",
+    "Jordan",
+    "{{date:-53}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+100 minutes'))",
+   "params": [
+    "perf-evt-14-p2",
+    "perf-evt-14",
+    "{{partner}}",
+    "Jordan",
+    "{{date:-52}}",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+170 minutes'))",
+   "params": [
+    "perf-evt-14-p3",
+    "perf-evt-14",
+    "{{adult2}}",
+    "Robin",
+    "{{date:-48}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+240 minutes'))",
+   "params": [
+    "perf-evt-14-p4",
+    "perf-evt-14",
+    "{{child}}",
+    "Mia",
+    "{{date:-66}}",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-52 days','+310 minutes'))",
+   "params": [
+    "perf-evt-14-p5",
+    "perf-evt-14",
+    "{{child2}}",
+    "Leo",
+    "{{date:-55}}",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-54 days','+0 minutes'))",
+   "params": [
+    "perf-evt-15",
+    "Who falls asleep first on movie night?",
+    "choice",
+    "[{\"id\":\"perf-evt-15-o1\",\"label\":\"Sam\"},{\"id\":\"perf-evt-15-o2\",\"label\":\"Jordan\"},{\"id\":\"perf-evt-15-o3\",\"label\":\"Robin\"},{\"id\":\"perf-evt-15-o4\",\"label\":\"Mia\"},{\"id\":\"perf-evt-15-o5\",\"label\":\"Leo\"}]",
+    1,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "perf-evt-15-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+30 minutes'))",
+   "params": [
+    "perf-evt-15-p1",
+    "perf-evt-15",
+    "{{me}}",
+    "Sam",
+    "perf-evt-15-o2",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+100 minutes'))",
+   "params": [
+    "perf-evt-15-p2",
+    "perf-evt-15",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-15-o1"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+170 minutes'))",
+   "params": [
+    "perf-evt-15-p3",
+    "perf-evt-15",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-15-o1",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+240 minutes'))",
+   "params": [
+    "perf-evt-15-p4",
+    "perf-evt-15",
+    "{{child}}",
+    "Mia",
+    "perf-evt-15-o2",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-58 days','+310 minutes'))",
+   "params": [
+    "perf-evt-15-p5",
+    "perf-evt-15",
+    "{{child2}}",
+    "Leo",
+    "perf-evt-15-o2",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-60 days','+0 minutes'))",
+   "params": [
+    "perf-evt-16",
+    "What will the dog chew next?",
+    "text",
+    "[]",
+    1,
+    "revealed",
+    "{{adult2}}",
+    "Robin",
+    "a slipper"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+30 minutes'))",
+   "params": [
+    "perf-evt-16-p1",
+    "perf-evt-16",
+    "{{me}}",
+    "Sam",
+    "A slipper"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+100 minutes'))",
+   "params": [
+    "perf-evt-16-p2",
+    "perf-evt-16",
+    "{{partner}}",
+    "Jordan",
+    "The remote",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+170 minutes'))",
+   "params": [
+    "perf-evt-16-p3",
+    "perf-evt-16",
+    "{{adult2}}",
+    "Robin",
+    "A slipper",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+240 minutes'))",
+   "params": [
+    "perf-evt-16-p4",
+    "perf-evt-16",
+    "{{child}}",
+    "Mia",
+    "Homework",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-64 days','+310 minutes'))",
+   "params": [
+    "perf-evt-16-p5",
+    "perf-evt-16",
+    "{{child2}}",
+    "Leo",
+    "The sofa"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-66 days','+0 minutes'))",
+   "params": [
+    "perf-evt-17",
+    "How many books will we read this summer?",
+    "All of us together",
+    "number",
+    "[]",
+    "books",
+    3,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "39"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+30 minutes'))",
+   "params": [
+    "perf-evt-17-p1",
+    "perf-evt-17",
+    "{{me}}",
+    "Sam",
+    "30",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+100 minutes'))",
+   "params": [
+    "perf-evt-17-p2",
+    "perf-evt-17",
+    "{{partner}}",
+    "Jordan",
+    "42",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+170 minutes'))",
+   "params": [
+    "perf-evt-17-p3",
+    "perf-evt-17",
+    "{{adult2}}",
+    "Robin",
+    "25",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-70 days','+240 minutes'))",
+   "params": [
+    "perf-evt-17-p4",
+    "perf-evt-17",
+    "{{child}}",
+    "Mia",
+    "50"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-72 days','+0 minutes'))",
+   "params": [
+    "perf-evt-18",
+    "Rain on sports day?",
+    "choice",
+    "[{\"id\":\"perf-evt-18-o1\",\"label\":\"Yes\"},{\"id\":\"perf-evt-18-o2\",\"label\":\"No\"}]",
+    1,
+    "revealed",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-18-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+30 minutes'))",
+   "params": [
+    "perf-evt-18-p1",
+    "perf-evt-18",
+    "{{me}}",
+    "Sam",
+    "perf-evt-18-o1",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+100 minutes'))",
+   "params": [
+    "perf-evt-18-p2",
+    "perf-evt-18",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-18-o2",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+170 minutes'))",
+   "params": [
+    "perf-evt-18-p3",
+    "perf-evt-18",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-18-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-76 days','+310 minutes'))",
+   "params": [
+    "perf-evt-18-p5",
+    "perf-evt-18",
+    "{{child2}}",
+    "Leo",
+    "perf-evt-18-o1"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-78 days','+0 minutes'))",
+   "params": [
+    "perf-evt-19",
+    "How many steps on the hike?",
+    "number",
+    "[]",
+    "steps",
+    2,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "21840"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+30 minutes'))",
+   "params": [
+    "perf-evt-19-p1",
+    "perf-evt-19",
+    "{{me}}",
+    "Sam",
+    "18000",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+100 minutes'))",
+   "params": [
+    "perf-evt-19-p2",
+    "perf-evt-19",
+    "{{partner}}",
+    "Jordan",
+    "22500"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+240 minutes'))",
+   "params": [
+    "perf-evt-19-p4",
+    "perf-evt-19",
+    "{{child}}",
+    "Mia",
+    "30000"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-82 days','+310 minutes'))",
+   "params": [
+    "perf-evt-19-p5",
+    "perf-evt-19",
+    "{{child2}}",
+    "Leo",
+    "21000",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-84 days','+0 minutes'))",
+   "params": [
+    "perf-evt-20",
+    "Which day does the parcel arrive?",
+    "date",
+    "[]",
+    1,
+    "revealed",
+    "{{adult2}}",
+    "Robin",
+    "{{date:-96}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+30 minutes'))",
+   "params": [
+    "perf-evt-20-p1",
+    "perf-evt-20",
+    "{{me}}",
+    "Sam",
+    "{{date:-98}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+170 minutes'))",
+   "params": [
+    "perf-evt-20-p3",
+    "perf-evt-20",
+    "{{adult2}}",
+    "Robin",
+    "{{date:-97}}"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+240 minutes'))",
+   "params": [
+    "perf-evt-20-p4",
+    "perf-evt-20",
+    "{{child}}",
+    "Mia",
+    "{{date:-95}}",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-88 days','+310 minutes'))",
+   "params": [
+    "perf-evt-20-p5",
+    "perf-evt-20",
+    "{{child2}}",
+    "Leo",
+    "{{date:-99}}",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-90 days','+0 minutes'))",
+   "params": [
+    "perf-evt-21",
+    "Who wins the school spelling bee?",
+    "text",
+    "[]",
+    2,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "Priya"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+100 minutes'))",
+   "params": [
+    "perf-evt-21-p2",
+    "perf-evt-21",
+    "{{partner}}",
+    "Jordan",
+    "Mia"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+170 minutes'))",
+   "params": [
+    "perf-evt-21-p3",
+    "perf-evt-21",
+    "{{adult2}}",
+    "Robin",
+    "Oliver",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+240 minutes'))",
+   "params": [
+    "perf-evt-21-p4",
+    "perf-evt-21",
+    "{{child}}",
+    "Mia",
+    "Mia",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-94 days','+310 minutes'))",
+   "params": [
+    "perf-evt-21-p5",
+    "perf-evt-21",
+    "{{child2}}",
+    "Leo",
+    "Priya",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-96 days','+0 minutes'))",
+   "params": [
+    "perf-evt-22",
+    "Pool temperature on holiday?",
+    "In degrees",
+    "number",
+    "[]",
+    "°C",
+    1,
+    "revealed",
+    "{{partner}}",
+    "Jordan",
+    "27"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+30 minutes'))",
+   "params": [
+    "perf-evt-22-p1",
+    "perf-evt-22",
+    "{{me}}",
+    "Sam",
+    "26"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+100 minutes'))",
+   "params": [
+    "perf-evt-22-p2",
+    "perf-evt-22",
+    "{{partner}}",
+    "Jordan",
+    "24",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+170 minutes'))",
+   "params": [
+    "perf-evt-22-p3",
+    "perf-evt-22",
+    "{{adult2}}",
+    "Robin",
+    "28",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+240 minutes'))",
+   "params": [
+    "perf-evt-22-p4",
+    "perf-evt-22",
+    "{{child}}",
+    "Mia",
+    "30",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-100 days','+310 minutes'))",
+   "params": [
+    "perf-evt-22-p5",
+    "perf-evt-22",
+    "{{child2}}",
+    "Leo",
+    "25"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-102 days','+0 minutes'))",
+   "params": [
+    "perf-evt-23",
+    "First to finish their advent chocolate?",
+    "choice",
+    "[{\"id\":\"perf-evt-23-o1\",\"label\":\"Mia\"},{\"id\":\"perf-evt-23-o2\",\"label\":\"Leo\"},{\"id\":\"perf-evt-23-o3\",\"label\":\"Dad\"}]",
+    1,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "perf-evt-23-o3"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+30 minutes'))",
+   "params": [
+    "perf-evt-23-p1",
+    "perf-evt-23",
+    "{{me}}",
+    "Sam",
+    "perf-evt-23-o3",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+100 minutes'))",
+   "params": [
+    "perf-evt-23-p2",
+    "perf-evt-23",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-23-o2",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+170 minutes'))",
+   "params": [
+    "perf-evt-23-p3",
+    "perf-evt-23",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-23-o2",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+240 minutes'))",
+   "params": [
+    "perf-evt-23-p4",
+    "perf-evt-23",
+    "{{child}}",
+    "Mia",
+    "perf-evt-23-o1"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-106 days','+310 minutes'))",
+   "params": [
+    "perf-evt-23-p5",
+    "perf-evt-23",
+    "{{child2}}",
+    "Leo",
+    "perf-evt-23-o3",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-108 days','+0 minutes'))",
+   "params": [
+    "perf-evt-24",
+    "How many guests at the barbecue?",
+    "number",
+    "[]",
+    "people",
+    2,
+    "revealed",
+    "{{adult2}}",
+    "Robin",
+    "21"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+30 minutes'))",
+   "params": [
+    "perf-evt-24-p1",
+    "perf-evt-24",
+    "{{me}}",
+    "Sam",
+    "18",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+100 minutes'))",
+   "params": [
+    "perf-evt-24-p2",
+    "perf-evt-24",
+    "{{partner}}",
+    "Jordan",
+    "22",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+170 minutes'))",
+   "params": [
+    "perf-evt-24-p3",
+    "perf-evt-24",
+    "{{adult2}}",
+    "Robin",
+    "15"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-112 days','+240 minutes'))",
+   "params": [
+    "perf-evt-24-p4",
+    "perf-evt-24",
+    "{{child}}",
+    "Mia",
+    "30",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-114 days','+0 minutes'))",
+   "params": [
+    "perf-evt-25",
+    "Which film tops the box office this weekend?",
+    "choice",
+    "[{\"id\":\"perf-evt-25-o1\",\"label\":\"The sequel\"},{\"id\":\"perf-evt-25-o2\",\"label\":\"The superhero one\"},{\"id\":\"perf-evt-25-o3\",\"label\":\"The cartoon\"}]",
+    2,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "perf-evt-25-o3"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+30 minutes'))",
+   "params": [
+    "perf-evt-25-p1",
+    "perf-evt-25",
+    "{{me}}",
+    "Sam",
+    "perf-evt-25-o2",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+100 minutes'))",
+   "params": [
+    "perf-evt-25-p2",
+    "perf-evt-25",
+    "{{partner}}",
+    "Jordan",
+    "perf-evt-25-o2"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+170 minutes'))",
+   "params": [
+    "perf-evt-25-p3",
+    "perf-evt-25",
+    "{{adult2}}",
+    "Robin",
+    "perf-evt-25-o3",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-118 days','+310 minutes'))",
+   "params": [
+    "perf-evt-25-p5",
+    "perf-evt-25",
+    "{{child2}}",
+    "Leo",
+    "perf-evt-25-o1",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, description, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-120 days','+0 minutes'))",
+   "params": [
+    "perf-evt-26",
+    "What time do we land?",
+    "Minutes late, if any",
+    "number",
+    "[]",
+    "minutes late",
+    1,
+    "revealed",
+    "{{partner}}",
+    "Jordan",
+    "35"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+30 minutes'))",
+   "params": [
+    "perf-evt-26-p1",
+    "perf-evt-26",
+    "{{me}}",
+    "Sam",
+    "0"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+100 minutes'))",
+   "params": [
+    "perf-evt-26-p2",
+    "perf-evt-26",
+    "{{partner}}",
+    "Jordan",
+    "25",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+240 minutes'))",
+   "params": [
+    "perf-evt-26-p4",
+    "perf-evt-26",
+    "{{child}}",
+    "Mia",
+    "15",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-124 days','+310 minutes'))",
+   "params": [
+    "perf-evt-26-p5",
+    "perf-evt-26",
+    "{{child2}}",
+    "Leo",
+    "60",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-126 days','+0 minutes'))",
+   "params": [
+    "perf-evt-27",
+    "Who scores first in the derby?",
+    "text",
+    "[]",
+    2,
+    "revealed",
+    "{{me}}",
+    "Sam",
+    "The captain"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+30 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+30 minutes'))",
+   "params": [
+    "perf-evt-27-p1",
+    "perf-evt-27",
+    "{{me}}",
+    "Sam",
+    "Number 9",
+    "Counted a corner and multiplied"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+170 minutes'))",
+   "params": [
+    "perf-evt-27-p3",
+    "perf-evt-27",
+    "{{adult2}}",
+    "Robin",
+    "Number 9",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+240 minutes'))",
+   "params": [
+    "perf-evt-27-p4",
+    "perf-evt-27",
+    "{{child}}",
+    "Mia",
+    "Own goal",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-130 days','+310 minutes'))",
+   "params": [
+    "perf-evt-27-p5",
+    "perf-evt-27",
+    "{{child2}}",
+    "Leo",
+    "Number 7",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__events (id, title, type, options_json, unit, points, status, created_by, created_by_name, created_at, correct_answer, revealed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+0 minutes'), ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-132 days','+0 minutes'))",
+   "params": [
+    "perf-evt-28",
+    "How tall is the sunflower by August?",
+    "number",
+    "[]",
+    "cm",
+    2,
+    "revealed",
+    "{{adult2}}",
+    "Robin",
+    "203"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+100 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+100 minutes'))",
+   "params": [
+    "perf-evt-28-p2",
+    "perf-evt-28",
+    "{{partner}}",
+    "Jordan",
+    "210",
+    "Same as last year"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+170 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+170 minutes'))",
+   "params": [
+    "perf-evt-28-p3",
+    "perf-evt-28",
+    "{{adult2}}",
+    "Robin",
+    "150",
+    "Trust me"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+240 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+240 minutes'))",
+   "params": [
+    "perf-evt-28-p4",
+    "perf-evt-28",
+    "{{child}}",
+    "Mia",
+    "250",
+    "Gut feeling"
+   ]
+  },
+  {
+   "sql": "INSERT INTO app_prediction_league__predictions (id, event_id, member_id, member_name, value, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+310 minutes'), strftime('%Y-%m-%dT%H:%M:%fZ','now','-136 days','+310 minutes'))",
+   "params": [
+    "perf-evt-28-p5",
+    "perf-evt-28",
+    "{{child2}}",
+    "Leo",
+    "195"
+   ]
+  }
+ ]
+}

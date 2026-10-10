@@ -18,7 +18,10 @@
   },
   "storage": "db",
   "preload": {
-    "events": {"sql": "SELECT * FROM app_prediction_league__events WHERE archived = 0 ORDER BY created_at DESC LIMIT 200"}
+    "events": {"sql": "SELECT * FROM app_prediction_league__events WHERE archived = 0 ORDER BY created_at DESC LIMIT 200"},
+    "predictions": {
+      "sql": "SELECT p.* FROM app_prediction_league__predictions p JOIN app_prediction_league__events e ON e.id = p.event_id WHERE e.archived = 0"
+    }
   },
   "row_policies": {
     "events": {
