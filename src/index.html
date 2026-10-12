@@ -129,6 +129,8 @@
     .lead-1 .avatar { box-shadow: 0 0 0 2px #fbbf24; }
     .empty, .loading { color: var(--muted); text-align: center; padding: 32px 16px; }
     .error { background: var(--red-soft); color: var(--red); padding: 9px 12px; border-radius: 8px; margin-bottom: 10px; font-size: .86rem; }
+    .load-error { margin: 0 0 12px; padding: 10px 14px; border-radius: 10px; background: var(--hub-tint-danger, #fee2e2); color: var(--hub-tint-danger-fg, #b91c1c); font-size: 0.9rem; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+    .load-error-retry { background: none; border: 1px solid currentColor; border-radius: 8px; padding: 5px 10px; font: inherit; font-weight: 600; color: inherit; cursor: pointer; flex-shrink: 0; }
     .notice { background: var(--green-soft); color: var(--green); padding: 9px 12px; border-radius: 8px; margin-bottom: 10px; font-size: .86rem; }
     .sealed-note { background: var(--purple-soft); color: var(--purple); padding: 10px 12px; border-radius: 8px; font-size: .86rem; font-weight: 600; }
     .modal-backdrop {
@@ -182,6 +184,7 @@ let predictions = [];       // own rows for sealed events; everyone's for reveal
 let selectedEventId = null;
 let tab = "events";         // "events" | "leaderboard"
 let error = "";
+let loadFailed = false; // the first load failed: events are unknown, not absent
 let notice = "";
 
 // draft state for the create form
@@ -215,12 +218,13 @@ async function dbq(sql, params = []) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sql, params }),
   });
-  const json = await res.json();
-  if (json.error) throw new Error(json.error);
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json || typeof json !== "object" || json.error) throw new Error(json?.error || "Couldn’t reach the hub. Try again.");
   return json;
 }
 
 async function loadMembers() {
+  let unread = null;
   if (!CONTEXT) {
     members = [
       { id: "demo-1", name: "Alex", role: "adult" },
@@ -229,11 +233,17 @@ async function loadMembers() {
       { id: "demo-4", name: "Riley", role: "child" },
     ];
   } else {
-    const res = await fetch(`${CONTEXT}?keys=family.members`);
-    members = ((await res.json())["family.members"]) ?? [];
+    // A member list that could not be read is a failed load, not a household with nobody in it.
+    try {
+      const res = await fetch(`${CONTEXT}?keys=family.members`);
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || typeof data !== "object" || data.error || (Array.isArray(data.$errors) && data.$errors.includes("family.members"))) throw new Error("Couldn’t reach the hub. Try again.");
+      members = data["family.members"] ?? [];
+    } catch (e) { unread = e; }
   }
   memberMap = new Map(members.map(m => [m.id, m]));
   currentMember = HUB_MEMBER ?? members[0] ?? { id: "guest", name: "Guest", role: "adult" };
+  if (unread) throw unread;
 }
 
 function seedDemo() {
@@ -288,10 +298,11 @@ async function refresh() {
   clearMessages();
   try {
     await Promise.all([loadMembers(), loadData()]);
+    loadFailed = false;
     if (selectedEventId && !events.some(e => e.id === selectedEventId)) selectedEventId = null;
     render();
-  } catch (e) {
-    error = e.message; render();
+  } catch {
+    loadFailed = true; render();
   }
 }
 
@@ -415,12 +426,19 @@ async function submitPrediction(form) {
 
   const existing = myPrediction(event.id);
   const now = nowIso();
+  // The hub answers 200 with nothing changed once the event is locked or
+  // revealed. Re-read so the page shows the event as it stands.
+  const requireSaved = async (res) => {
+    if (!DB || res.changed !== 0) return;
+    await loadData().catch(() => {});
+    throw new Error("Predictions are closed for this event.");
+  };
   try {
     if (existing) {
-      if (DB) await dbq(
+      if (DB) await requireSaved(await dbq(
         `UPDATE app_prediction_league__predictions SET value = ?, note = ?, updated_at = ? WHERE id = ?`,
         [result.value, note, now, existing.id]
-      );
+      ));
       const idx = predictions.findIndex(p => p.id === existing.id);
       if (idx !== -1) predictions[idx] = { ...predictions[idx], value: result.value, note, updated_at: now };
       showNotice("Prediction updated.");
@@ -429,12 +447,12 @@ async function submitPrediction(form) {
         id: uid("pred"), event_id: event.id, member_id: currentMember.id,
         member_name: currentMember.name, value: result.value, note, created_at: now, updated_at: now,
       };
-      if (DB) await dbq(
+      if (DB) await requireSaved(await dbq(
         `INSERT INTO app_prediction_league__predictions
           (id, event_id, member_id, member_name, value, note, created_at, updated_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [pred.id, pred.event_id, pred.member_id, pred.member_name, pred.value, pred.note, pred.created_at, pred.updated_at]
-      );
+      ));
       predictions = [...predictions, pred];
       showNotice("Prediction locked in — sealed until reveal.");
     }
@@ -825,6 +843,12 @@ function renderCreate() {
 function render() {
   const root = document.getElementById("root");
   root.className = "app";
+  if (loadFailed) {
+    root.innerHTML = `
+      <div class="topbar"><div><h1>${glyph("crystal-ball")} Prediction League</h1></div></div>
+      <div class="load-error" data-testid="load-error" role="alert"><span>Couldn’t load the league.</span> <button type="button" class="load-error-retry" data-testid="load-retry">Try again</button></div>`;
+    return;
+  }
   if (selectedEventId) { root.innerHTML = renderDetail(); return; }
   if (tab === "create") { root.innerHTML = renderCreate(); return; }
   root.innerHTML = tab === "leaderboard" ? renderLeaderboard() : renderEventList();
@@ -836,6 +860,7 @@ document.addEventListener("click", (e) => {
   if (!t) return;
   const openId = t.getAttribute("data-open-event");
   if (openId) { selectedEventId = openId; clearMessages(); render(); return; }
+  if (t.matches('[data-testid="load-retry"]')) { refresh(); return; }
   if (t.hasAttribute("data-close-modal")) { closeModal(); return; }
   if (t.matches("[data-back]")) { selectedEventId = null; clearMessages(); render(); return; }
   if (t.matches("[data-view-list]")) { tab = "events"; clearMessages(); render(); return; }
