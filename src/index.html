@@ -309,6 +309,13 @@ async function refresh() {
 function clearMessages() { error = ""; notice = ""; }
 function showError(m) { error = m; notice = ""; render(); }
 function showNotice(m) { notice = m; error = ""; render(); }
+// A failed write: this app's own wording (an error marked `forUser`) is shown
+// as it is; anything else reads as `line` and goes to the console.
+function failText(e, line) {
+  if (e?.forUser) return e.message;
+  console.error("[prediction-league]", e);
+  return line;
+}
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
 let modalEl = null;
@@ -399,7 +406,7 @@ async function createEvent(form) {
     }).catch(() => {});
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = "Create event"; }
-    showError(e.message);
+    showError(failText(e, "Couldn’t create the event — try again."));
   }
 }
 
@@ -431,7 +438,7 @@ async function submitPrediction(form) {
   const requireSaved = async (res) => {
     if (!DB || res.changed !== 0) return;
     await loadData().catch(() => {});
-    throw new Error("Predictions are closed for this event.");
+    throw Object.assign(new Error("Predictions are closed for this event."), { forUser: true });
   };
   try {
     if (existing) {
@@ -458,7 +465,7 @@ async function submitPrediction(form) {
     }
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = existing ? "Update prediction" : "Lock it in"; }
-    showError(e.message);
+    showError(failText(e, "Couldn’t save your prediction — try again."));
   }
 }
 
@@ -479,7 +486,7 @@ async function lockEvent(eventId) {
     if (idx !== -1) events[idx] = { ...events[idx], status: "locked" };
     showNotice("Event locked. Predictions are sealed until you reveal.");
     publishEvent("prediction_league.event_locked", eventId, { title: event.title });
-  } catch (e) { showError(e.message); }
+  } catch (e) { showError(failText(e, "Couldn’t lock the event — try again.")); }
 }
 
 function openRevealModal(eventId) {
@@ -547,7 +554,7 @@ async function revealEvent(form) {
     }).catch(() => {});
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = "Reveal & score"; }
-    showError(e.message);
+    showError(failText(e, "Couldn’t reveal the answer — try again."));
   }
 }
 
@@ -571,7 +578,7 @@ async function archiveEvent(eventId) {
     predictions = predictions.filter(p => p.event_id !== eventId);
     selectedEventId = null;
     showNotice("Event archived.");
-  } catch (e) { showError(e.message); }
+  } catch (e) { showError(failText(e, "Couldn’t archive the event — try again.")); }
 }
 
 // ── Rendering ────────────────────────────────────────────────────────────────
