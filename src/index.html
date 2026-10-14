@@ -167,6 +167,7 @@ import { esc, isAdult, memberColor, initial, hubConfirm, hubAlert, sendHubNotifi
 import {
   canPredict, canManageEvents, isOpen, isLocked, isRevealed,
   validatePrediction, displayValue, scoreEvent, computeLeaderboard, numericValue, searchableFields,
+  outcomeUnknown, storedDiffers, SAVED_AS_FIRST, failureLine,
 } from "./logic.js";
 
 const CONTEXT = window.__CONTEXT_URL ?? "";
@@ -190,6 +191,14 @@ let notice = "";
 // draft state for the create form
 let draftType = "choice";
 let draftOptions = ["", ""];
+// What was typed into the create form's own fields, kept so a redraw (a failed
+// Create, a type switch, an option added) draws it back as typed.
+const EMPTY_DRAFT = { title: "", description: "", unit: "", points: "1", lock_at: "" };
+let draftFields = { ...EMPTY_DRAFT };
+// The new event's id, minted on the open form's first Create and sent on every
+// retry: a try whose answer was lost may have stored the event, and a second
+// press must find it rather than add another and notify everyone twice.
+let draftEventId = null;
 
 function nowIso() { return new Date().toISOString(); }
 function uid(prefix) { return `${prefix}-${crypto.randomUUID()}`; }
@@ -219,7 +228,9 @@ async function dbq(sql, params = []) {
     body: JSON.stringify({ sql, params }),
   });
   const json = await res.json().catch(() => null);
-  if (!res.ok || !json || typeof json !== "object" || json.error) throw new Error(json?.error || "Couldn’t reach the hub. Try again.");
+  if (!res.ok || !json || typeof json !== "object" || json.error) {
+    throw Object.assign(new Error(json?.error || "Couldn’t reach the hub. Try again."), { status: res.status, code: json?.code });
+  }
   return json;
 }
 
@@ -310,11 +321,21 @@ function clearMessages() { error = ""; notice = ""; }
 function showError(m) { error = m; notice = ""; render(); }
 function showNotice(m) { notice = m; error = ""; render(); }
 // A failed write: this app's own wording (an error marked `forUser`) is shown
-// as it is; anything else reads as `line` and goes to the console.
-function failText(e, line) {
-  if (e?.forUser) return e.message;
-  console.error("[prediction-league]", e);
-  return line;
+// as it is; anything else gets `failureLine`'s line from its status, and the
+// error goes to the console.
+function failText(e, words) {
+  if (!e?.forUser) console.error("[prediction-league]", e);
+  return failureLine(e, words);
+}
+// A plain `WHERE id = ?` write the hub answered with nothing changed: re-read
+// the event. Gone: removed. Still there: the row policy kept this write from
+// this member, the permission line. The read failed: unknown.
+async function unchangedEvent(eventId, words) {
+  let found = null;
+  try { found = !!(await dbq("SELECT id FROM app_prediction_league__events WHERE id = ?", [eventId])).rows?.[0]; }
+  catch (readErr) { console.error(readErr); }
+  await loadData().catch(() => {});
+  return Object.assign(new Error(failureLine(null, { ...words, found })), { forUser: true });
 }
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
@@ -363,6 +384,11 @@ async function createEvent(form) {
   const points = Math.max(1, Number(form.points.value) || 1);
   const unit = form.unit ? form.unit.value.trim() : "";
   const lock_at = form.lock_at ? form.lock_at.value : "";
+  // Kept as typed, so the redraw a failure makes draws it back.
+  draftFields = {
+    title: form.title.value, description: form.description.value,
+    unit: form.unit ? form.unit.value : draftFields.unit, points: form.points.value, lock_at,
+  };
   if (!title) { form.title.focus(); return showError("Give the event a title."); }
 
   let options = [];
@@ -374,39 +400,62 @@ async function createEvent(form) {
   const btn = form.querySelector('button[type="submit"]');
   if (btn) { btn.disabled = true; btn.textContent = "Creating…"; }
 
-  const ev = {
-    id: uid("evt"), title, description, type: draftType,
+  let ev = {
+    id: (draftEventId ??= uid("evt")), title, description, type: draftType,
     options_json: JSON.stringify(options), unit: draftType === "number" ? unit : "",
     correct_answer: null, points, lock_at, status: "open",
     created_by: currentMember.id, created_by_name: currentMember.name, created_at: nowIso(), revealed_at: null,
   };
+  let note = "";
 
   try {
     if (DB) {
-      await dbq(
-        `INSERT INTO app_prediction_league__events
-          (id, title, description, type, options_json, unit, correct_answer, points, lock_at, status, created_by, created_by_name, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, 'open', ?, ?, ?)`,
-        [ev.id, ev.title, ev.description, ev.type, ev.options_json, ev.unit, ev.points, ev.lock_at, ev.created_by, ev.created_by_name, ev.created_at]
-      );
+      try {
+        await dbq(
+          `INSERT INTO app_prediction_league__events
+            (id, title, description, type, options_json, unit, correct_answer, points, lock_at, status, created_by, created_by_name, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, 'open', ?, ?, ?)`,
+          [ev.id, ev.title, ev.description, ev.type, ev.options_json, ev.unit, ev.points, ev.lock_at, ev.created_by, ev.created_by_name, ev.created_at]
+        );
+      } catch (e) {
+        // Unknown outcome: read the event back by the pinned id. Found means an
+        // earlier try landed and its success path never ran, so it runs now,
+        // once, as stored. Not found, or the read failed: the create fails, the
+        // id stays pinned.
+        if (!outcomeUnknown(e)) throw e;
+        let stored = null;
+        // The id is ours: a failed read leaves the outcome unknown, so the
+        // generic line shows, never "already exists".
+        try { stored = (await dbq("SELECT * FROM app_prediction_league__events WHERE id = ?", [ev.id])).rows?.[0] ?? null; }
+        catch (readErr) { console.error(readErr); throw new Error("event read-back failed", { cause: e }); }
+        if (!stored) throw e;
+        console.error(e);
+        // Edited since that first try (options compared by label: their ids are
+        // minted per try): what was stored is kept, and said so.
+        const labels = (json) => { try { return JSON.parse(json || "[]").map((o) => o.label).join("\n"); } catch { return ""; } };
+        if (storedDiffers(stored, { title: ev.title, description: ev.description, type: ev.type, unit: ev.unit, points: ev.points, lock_at: ev.lock_at })
+          || labels(stored.options_json) !== labels(ev.options_json)) note = SAVED_AS_FIRST;
+        ev = stored;
+      }
     }
-    events = [hydrateEvent(ev), ...events];
-    draftType = "choice"; draftOptions = ["", ""];
+    draftEventId = null;
+    events = [hydrateEvent(ev), ...events.filter((x) => x.id !== ev.id)];
+    draftType = "choice"; draftOptions = ["", ""]; draftFields = { ...EMPTY_DRAFT };
     selectedEventId = ev.id;
     tab = "events";
-    showNotice("Event created — predictions are open.");
-    publishEvent("prediction_league.event_created", ev.id, { title });
+    if (note) showError(note); else showNotice("Event created — predictions are open.");
+    publishEvent("prediction_league.event_created", ev.id, { title: ev.title });
     // The event title is whatever the member typed, so it goes to a lock screen
     // only for recipients who opted into notification previews.
     sendHubNotification({
       title: "New prediction",
-      body: `${currentMember.name}: ${title}`,
+      body: `${currentMember.name}: ${ev.title}`,
       generic: { body: `${currentMember.name} opened a new prediction.` },
       url: hubAppUrl(APP_ID, { eventId: ev.id }),
     }).catch(() => {});
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = "Create event"; }
-    showError(failText(e, "Couldn’t create the event — try again."));
+    showError(failText(e, { action: "create the event", thing: "event" }));
   }
 }
 
@@ -465,7 +514,7 @@ async function submitPrediction(form) {
     }
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = existing ? "Update prediction" : "Lock it in"; }
-    showError(failText(e, "Couldn’t save your prediction — try again."));
+    showError(failText(e, { action: "save your prediction", thing: "prediction" }));
   }
 }
 
@@ -481,12 +530,15 @@ async function lockEvent(eventId) {
   });
   if (!ok) return;
   try {
-    if (DB) await dbq("UPDATE app_prediction_league__events SET status = 'locked' WHERE id = ?", [eventId]);
+    if (DB) {
+      const res = await dbq("UPDATE app_prediction_league__events SET status = 'locked' WHERE id = ?", [eventId]);
+      if (res.changed === 0) throw await unchangedEvent(eventId, { action: "lock the event", thing: "event" });
+    }
     const idx = events.findIndex(e => e.id === eventId);
     if (idx !== -1) events[idx] = { ...events[idx], status: "locked" };
     showNotice("Event locked. Predictions are sealed until you reveal.");
     publishEvent("prediction_league.event_locked", eventId, { title: event.title });
-  } catch (e) { showError(failText(e, "Couldn’t lock the event — try again.")); }
+  } catch (e) { showError(failText(e, { action: "lock the event", thing: "event" })); }
 }
 
 function openRevealModal(eventId) {
@@ -531,12 +583,15 @@ async function revealEvent(form) {
   const now = nowIso();
   try {
     if (DB) {
-      await dbq(
+      const res = await dbq(
         "UPDATE app_prediction_league__events SET status = 'revealed', correct_answer = ?, revealed_at = ? WHERE id = ?",
         [result.value, now, eventId]
       );
-      // reload predictions — reveal makes everyone's rows visible for scoring
-      await loadData();
+      // Nothing revealed: nobody is told results are in.
+      if (res.changed === 0) throw await unchangedEvent(eventId, { action: "reveal the answer", thing: "event" });
+      // reload predictions — reveal makes everyone's rows visible for scoring.
+      // The answer is stored: a failed reload must not read as a failed reveal.
+      await loadData().catch((e) => console.error(e));
     } else {
       const idx = events.findIndex(e => e.id === eventId);
       if (idx !== -1) events[idx] = { ...events[idx], status: "revealed", correct_answer: result.value, revealed_at: now };
@@ -554,7 +609,7 @@ async function revealEvent(form) {
     }).catch(() => {});
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = "Reveal & score"; }
-    showError(failText(e, "Couldn’t reveal the answer — try again."));
+    showError(failText(e, { action: "reveal the answer", thing: "event" }));
   }
 }
 
@@ -573,12 +628,15 @@ async function archiveEvent(eventId) {
   });
   if (!ok) return;
   try {
-    if (DB) await dbq("UPDATE app_prediction_league__events SET archived = 1 WHERE id = ?", [eventId]);
+    if (DB) {
+      const res = await dbq("UPDATE app_prediction_league__events SET archived = 1 WHERE id = ?", [eventId]);
+      if (res.changed === 0) throw await unchangedEvent(eventId, { action: "archive the event", thing: "event" });
+    }
     events = events.filter(e => e.id !== eventId);
     predictions = predictions.filter(p => p.event_id !== eventId);
     selectedEventId = null;
     showNotice("Event archived.");
-  } catch (e) { showError(failText(e, "Couldn’t archive the event — try again.")); }
+  } catch (e) { showError(failText(e, { action: "archive the event", thing: "event" })); }
 }
 
 // ── Rendering ────────────────────────────────────────────────────────────────
@@ -817,8 +875,8 @@ function renderCreate() {
     <div class="topbar"><h1>New event</h1></div>
     ${renderMessages()}
     <form class="card form" id="create-form">
-      <div class="field"><label for="title">Title</label><input id="title" name="title" placeholder="e.g. Who wins the big game?" data-autofocus required /></div>
-      <div class="field"><label for="description">Details (optional)</label><textarea id="description" name="description" placeholder="Context, rules, deadline…"></textarea></div>
+      <div class="field"><label for="title">Title</label><input id="title" name="title" value="${esc(draftFields.title)}" placeholder="e.g. Who wins the big game?" data-autofocus required /></div>
+      <div class="field"><label for="description">Details (optional)</label><textarea id="description" name="description" placeholder="Context, rules, deadline…">${esc(draftFields.description)}</textarea></div>
       <div class="field">
         <label>Prediction type</label>
         <div class="actions">${typeBtn("choice", "Multiple choice")}${typeBtn("number", "Closest number")}${typeBtn("date", "Closest date")}${typeBtn("text", "Free answer")}</div>
@@ -835,10 +893,10 @@ function renderCreate() {
           </div>
           <button type="button" class="btn btn-ghost btn-sm" data-add-option style="justify-self:start">Add option</button>
         </div>` : ""}
-      ${draftType === "number" ? `<div class="field"><label for="unit">Unit (optional)</label><input id="unit" name="unit" placeholder="e.g. jellybeans, points, minutes" /></div>` : ""}
+      ${draftType === "number" ? `<div class="field"><label for="unit">Unit (optional)</label><input id="unit" name="unit" value="${esc(draftFields.unit)}" placeholder="e.g. jellybeans, points, minutes" /></div>` : ""}
       <div class="grid two">
-        <div class="field"><label for="points">Points for winning</label><input id="points" name="points" type="number" min="1" value="1" /></div>
-        <div class="field"><label for="lock_at">Closes (optional label)</label><input id="lock_at" name="lock_at" type="date" /></div>
+        <div class="field"><label for="points">Points for winning</label><input id="points" name="points" type="number" min="1" value="${esc(draftFields.points)}" /></div>
+        <div class="field"><label for="lock_at">Closes (optional label)</label><input id="lock_at" name="lock_at" type="date" value="${esc(draftFields.lock_at)}" /></div>
       </div>
       <div class="actions">
         <button type="submit" class="btn">Create event</button>
@@ -871,7 +929,7 @@ document.addEventListener("click", (e) => {
   if (t.hasAttribute("data-close-modal")) { closeModal(); return; }
   if (t.matches("[data-back]")) { selectedEventId = null; clearMessages(); render(); return; }
   if (t.matches("[data-view-list]")) { tab = "events"; clearMessages(); render(); return; }
-  if (t.matches("[data-view-create]")) { tab = "create"; clearMessages(); render(); return; }
+  if (t.matches("[data-view-create]")) { tab = "create"; draftEventId = null; draftFields = { ...EMPTY_DRAFT }; clearMessages(); render(); return; }
   if (t.hasAttribute("data-tab")) { tab = t.getAttribute("data-tab"); selectedEventId = null; clearMessages(); render(); return; }
   if (t.hasAttribute("data-set-type")) { setDraftType(t.getAttribute("data-set-type")); return; }
   if (t.hasAttribute("data-add-option")) { addDraftOption(); return; }
@@ -884,6 +942,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("input", (e) => {
   const opt = e.target.closest("[data-opt]");
   if (opt) { draftOptions[Number(opt.getAttribute("data-opt"))] = opt.value; return; }
+  if (e.target.closest("#create-form") && Object.hasOwn(draftFields, e.target.name)) draftFields[e.target.name] = e.target.value;
 });
 
 document.addEventListener("submit", (e) => {
