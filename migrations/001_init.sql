@@ -8,7 +8,7 @@
 --                frozen once the parent is 'locked' or 'revealed'.
 
 CREATE TABLE IF NOT EXISTS app_prediction_league__events (
-  id             TEXT PRIMARY KEY,
+  id             TEXT NOT NULL PRIMARY KEY,
   title          TEXT NOT NULL,
   description    TEXT NOT NULL DEFAULT '',
   type           TEXT NOT NULL DEFAULT 'choice',   -- 'choice' | 'number' | 'date' | 'text'
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS app_prediction_league__events (
 );
 
 CREATE TABLE IF NOT EXISTS app_prediction_league__predictions (
-  id          TEXT PRIMARY KEY,
+  id          TEXT NOT NULL PRIMARY KEY,
   event_id    TEXT NOT NULL,
   member_id   TEXT NOT NULL,
   member_name TEXT NOT NULL,
